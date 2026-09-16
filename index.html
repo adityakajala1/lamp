@@ -27,17 +27,10 @@
       background-color: #f2efe9;
     }
 
-    /* Ambient volumetric light */
+    /* Ambient volumetric light removed to keep light only in the cone */
     .ambient-glow {
-      position: absolute; top: 30vh; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100vw; height: 100vw;
-      background: radial-gradient(circle, rgba(255, 140, 20, 0.12) 0%, rgba(255, 80, 0, 0.05) 30%, transparent 60%);
-      pointer-events: none; z-index: 1;
-      transition: opacity var(--transition-time) ease;
-      mix-blend-mode: screen;
+      display: none;
     }
-    body.light-mode .ambient-glow { opacity: 0; }
 
     .vignette-dark, .vignette-light {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -138,22 +131,20 @@
     /* FLawless 3D Lighting Layers */
     
     .light-cone {
-      position: absolute; top: 110px; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 120vh;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 20, 0.25) 0%, rgba(255, 80, 0, 0.05) 40%, transparent 70%);
+      position: absolute; top: 110px; left: 50%; margin-left: -100px;
+      width: 200px; height: 150vh;
+      background: linear-gradient(to bottom, rgba(255, 140, 20, 0.6) 0%, rgba(255, 80, 0, 0.1) 60%, transparent 100%);
+      transform-origin: top center;
+      transform: perspective(600px) rotateX(-25deg);
+      filter: blur(20px);
       z-index: 0; pointer-events: none; mix-blend-mode: screen;
       transition: opacity var(--transition-time) ease;
     }
     body.light-mode .light-cone { opacity: 0; }
 
     .massive-glow {
-      position: absolute; top: 120px; left: 50%; transform: translate(-50%, -50%);
-      width: 400px; height: 400px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 140, 20, 0.5) 0%, rgba(255, 100, 0, 0.2) 30%, transparent 70%);
-      z-index: 1; pointer-events: none; mix-blend-mode: screen;
-      transition: opacity var(--transition-time) ease;
+      display: none;
     }
-    body.light-mode .massive-glow { opacity: 0; }
 
     .lamp-shade {
       position: absolute; top: 0; left: 0; width: 100%; height: 120px;
