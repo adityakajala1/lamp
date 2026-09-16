@@ -17,13 +17,15 @@
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      background-color: #050505;
-      transition: background-color var(--transition-time) ease;
+      /* Deep luxury studio void */
+      background: radial-gradient(circle at 50% 50%, #1a1510 0%, #050403 100%);
+      transition: background var(--transition-time) ease;
       user-select: none; -webkit-user-select: none;
     }
 
     body.light-mode {
-      background-color: #ffffff;
+      /* Premium studio white seamless paper sweep */
+      background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e8e6e1 100%);
     }
 
     /* Ambient Glow on Wall */
@@ -70,12 +72,18 @@
     }
 
     .base-shadow {
-      position: absolute; bottom: -8px; left: 50%; margin-left: -75px;
-      width: 150px; height: 16px; border-radius: 50%;
-      background: rgba(0,0,0,1); filter: blur(5px);
-      z-index: 0; transition: opacity var(--transition-time) ease;
+      position: absolute; bottom: -15px; left: 50%; margin-left: -120px;
+      width: 240px; height: 30px; border-radius: 50%;
+      background: rgba(0,0,0,0.8); filter: blur(15px);
+      z-index: 0; transition: background var(--transition-time) ease, opacity var(--transition-time) ease;
     }
-    body.light-mode .base-shadow { background: rgba(0,0,0,0.7); }
+    .base-shadow::after {
+      content: ''; position: absolute; bottom: 8px; left: 50%; margin-left: -60px;
+      width: 120px; height: 12px; border-radius: 50%;
+      background: rgba(0,0,0,1); filter: blur(3px);
+    }
+    body.light-mode .base-shadow { background: rgba(0,0,0,0.25); }
+    body.light-mode .base-shadow::after { background: rgba(0,0,0,0.5); }
 
     /* High-end Photorealistic Brass Base */
     .lamp-base {
