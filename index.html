@@ -45,7 +45,7 @@
       transition: opacity var(--transition-time) ease;
     }
     .vignette-dark {
-      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.9) 120%);
+      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.95) 120%);
     }
     .vignette-light {
       background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.15) 120%);
@@ -135,9 +135,29 @@
     body.light-mode .stem::before { opacity: 0; }
     body.light-mode .stem::after { opacity: 1; }
 
+    /* FLawless 3D Lighting Layers */
+    
+    .light-cone {
+      position: absolute; top: 110px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 120vh;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 140, 20, 0.25) 0%, rgba(255, 80, 0, 0.05) 40%, transparent 70%);
+      z-index: 0; pointer-events: none; mix-blend-mode: screen;
+      transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .light-cone { opacity: 0; }
+
+    .massive-glow {
+      position: absolute; top: 120px; left: 50%; transform: translate(-50%, -50%);
+      width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 140, 20, 0.5) 0%, rgba(255, 100, 0, 0.2) 30%, transparent 70%);
+      z-index: 1; pointer-events: none; mix-blend-mode: screen;
+      transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .massive-glow { opacity: 0; }
+
     .lamp-shade {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 120px 120px 0 0; z-index: 2;
+      position: absolute; top: 0; left: 0; width: 100%; height: 120px;
+      border-radius: 120px 120px 0 0; z-index: 2; /* Physically masks the top half of massive-glow */
     }
     .lamp-shade::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
@@ -151,11 +171,14 @@
     body.light-mode .lamp-shade::after { opacity: 1; }
 
     .lamp-opening {
-      position: absolute; top: 110px; left: 0; width: 100%; height: 20px; border-radius: 50%; z-index: 3;
+      position: absolute; top: 105px; left: 0; width: 100%; height: 30px; border-radius: 50%; z-index: 3;
     }
     .lamp-opening::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: #ff9d00; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); transition: opacity var(--transition-time) ease;
+      /* Luxurious concave metallic reflection */
+      background: radial-gradient(ellipse at 50% 50%, #fff6d6 0%, #ffaa32 25%, #a85200 60%, #1a0800 100%);
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), inset 0 -2px 5px rgba(0,0,0,0.5); 
+      transition: opacity var(--transition-time) ease;
     }
     .lamp-opening::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
@@ -164,38 +187,9 @@
     body.light-mode .lamp-opening::before { opacity: 0; }
     body.light-mode .lamp-opening::after { opacity: 1; }
 
-    .bulb {
-      position: absolute; top: 105px; left: 50%; margin-left: -25px;
-      width: 50px; height: 50px; border-radius: 50%; z-index: 5;
-    }
-    .bulb::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #ffe3a1 50%, #ff8c00 100%);
-      box-shadow: 0 0 30px 10px rgba(255,140,0,0.9), 0 0 80px 30px rgba(255,80,0,0.4); 
-      transition: opacity var(--transition-time) ease;
-    }
-    .bulb::after {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: #e8e8e8; box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), inset 2px 2px 5px rgba(255,255,255,0.8); 
-      opacity: 0; transition: opacity var(--transition-time) ease;
-    }
-    body.light-mode .bulb::before { opacity: 0; }
-    body.light-mode .bulb::after { opacity: 1; }
-
-    .light-cone {
-      position: absolute; top: 110px; left: -180px; width: 600px; height: 120vh;
-      background: linear-gradient(to bottom, rgba(255, 140, 20, 0.18) 0%, rgba(255, 100, 0, 0.03) 40%, transparent 100%);
-      clip-path: polygon(180px 0, 420px 0, 100% 100%, 0 100%); 
-      z-index: 0; pointer-events: none;
-      filter: blur(25px); /* Upgraded: Volumetric blur effect */
-      transform: scaleX(1.1); /* Compensate for blur edge shrinkage */
-      transition: opacity var(--transition-time) ease; mix-blend-mode: screen;
-    }
-    body.light-mode .light-cone { opacity: 0; }
-
     .pull-chain {
       position: absolute; top: 120px; left: 50%; margin-left: -1px; width: 2px; height: 120px;
-      z-index: 4; /* Upgraded: Behind the bulb */
+      z-index: 4; /* Hangs physically between the inner bowl and the bulb */
       transform-origin: top center;
     }
     .pull-chain::before {
@@ -211,7 +205,7 @@
 
     .pull-chain-handle {
       position: absolute; bottom: -20px; left: -3px; width: 8px; height: 25px; border-radius: 4px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* Added subtle shadow for depth */
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5);
     }
     .pull-chain-handle::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #9a6d2f, #d4a35f, #9a6d2f); transition: opacity var(--transition-time) ease;
@@ -221,6 +215,24 @@
     }
     body.light-mode .pull-chain-handle::before { opacity: 0; }
     body.light-mode .pull-chain-handle::after { opacity: 1; }
+
+    .bulb {
+      position: absolute; top: 100px; left: 50%; margin-left: -20px;
+      width: 40px; height: 40px; border-radius: 50%; z-index: 5; /* In front of everything */
+    }
+    .bulb::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #ffeaa1 40%, #ff8c00 100%);
+      box-shadow: 0 0 10px 2px rgba(255,140,0,0.8); 
+      transition: opacity var(--transition-time) ease;
+    }
+    .bulb::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: #e8e8e8; box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), inset 2px 2px 5px rgba(255,255,255,0.8); 
+      opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .bulb::before { opacity: 0; }
+    body.light-mode .bulb::after { opacity: 1; }
 
     /* Flicker Animation */
     @keyframes flickerAnim {
@@ -236,7 +248,8 @@
     .flicker-active .bulb::before,
     .flicker-active .ambient-glow,
     .flicker-active .lamp-opening::before,
-    .flicker-active .light-cone {
+    .flicker-active .light-cone,
+    .flicker-active .massive-glow {
       animation: flickerAnim 0.35s ease-out forwards;
     }
 
@@ -264,13 +277,14 @@
     <div class="lamp-head" id="lamp-head">
       <div class="lamp-shadow" id="lamp-shadow"></div>
       <div class="light-cone"></div>
+      <div class="massive-glow"></div>
       <div class="stem"></div>
       <div class="lamp-shade"></div>
       <div class="lamp-opening"></div>
       <div class="pull-chain" id="pull-chain">
         <div class="pull-chain-handle"></div>
       </div>
-      <div class="bulb"></div> <!-- Moved bulb below pull-chain so it overlaps it correctly -->
+      <div class="bulb"></div> 
     </div>
   </div>
 
@@ -343,7 +357,7 @@
       }
     }
 
-    // Canvas Dust & Fireflies (Upgraded to react to mouse)
+    // Canvas Dust & Fireflies
     const canvas = document.getElementById('dust-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -393,7 +407,6 @@
       const isDark = !document.body.classList.contains('light-mode');
       
       particles.forEach(p => {
-        // Upgraded: Particles repel from mouse
         const dx = targetMouseX - p.x;
         const dy = targetMouseY - p.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
@@ -405,8 +418,6 @@
 
         p.x += p.vx;
         p.y += p.vy - 0.15;
-        
-        // Friction
         p.vx *= 0.99;
         
         if (p.x < 0) p.x = canvas.width;
