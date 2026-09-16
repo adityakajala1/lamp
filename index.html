@@ -6,25 +6,32 @@
   <title>Lumo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --transition-time: 1.2s;
+      /* Taste Script: Pure monochrome + single saturated pop (Cobalt) */
+      --accent-core: #ffffff;
+      --accent-glow: #0066ff;
+      --accent-deep: #001155;
+      --accent-fade: rgba(0, 102, 255, 0.25);
+      --bg-dark: #050505;
+      --bg-light: #f4f5f7; /* Cool silver-grey, no warm beige */
     }
 
     body {
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      background-color: #080809;
+      background-color: var(--bg-dark);
       color: #f0f0f0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
       transition: background-color var(--transition-time) ease, color var(--transition-time) ease;
       user-select: none; -webkit-user-select: none;
     }
 
     body.light-mode {
-      background-color: #f2efe9;
+      background-color: var(--bg-light);
     }
 
     /* Ambient volumetric light removed to keep light only in the cone */
@@ -41,7 +48,7 @@
       background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.95) 120%);
     }
     .vignette-light {
-      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.15) 120%);
+      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.08) 120%);
       opacity: 0;
     }
     body.light-mode .vignette-dark { opacity: 0; }
@@ -62,12 +69,11 @@
 
     /* Texts */
     .text-container {
-      position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); text-align: center;
-      color: rgba(255,255,255,0.6); transition: color var(--transition-time) ease; z-index: 20;
+      position: absolute; bottom: 25%; left: 50%; transform: translateX(-50%); text-align: center;
+      color: rgba(255,255,255,0.7); transition: color var(--transition-time) ease; z-index: 20;
     }
-    body.light-mode .text-container { color: rgba(0,0,0,0.6); }
-    .text-main { font-size: 12px; letter-spacing: 0.4em; margin-bottom: 15px; }
-    .text-sub { font-size: 10px; letter-spacing: 0.2em; opacity: 0.5; }
+    body.light-mode .text-container { color: rgba(0,0,0,0.8); }
+    .text-main { font-size: 14px; font-weight: 600; letter-spacing: 0.5em; margin-bottom: 15px; text-transform: uppercase; }
 
     /* Lamp Structure */
     .ceiling-mount {
@@ -132,7 +138,8 @@
     
     .light-cone {
       position: absolute; top: 110px; left: 0; width: 100%; height: 120vh;
-      background: linear-gradient(to bottom, rgba(255, 140, 20, 0.7) 0%, rgba(255, 80, 0, 0.2) 50%, transparent 100%);
+      /* Taste Script: Pure monochrome + single saturated pop (Cobalt) */
+      background: linear-gradient(to bottom, rgba(0, 102, 255, 0.7) 0%, rgba(0, 102, 255, 0.15) 50%, transparent 100%);
       
       /* Gown-like massive 2D volumetric light cone */
       -webkit-mask-image: conic-gradient(from 105deg at 50% -32px, transparent 0deg, black 40deg, black 110deg, transparent 150deg);
@@ -167,14 +174,14 @@
     }
     .lamp-opening::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      /* Luxurious concave metallic reflection */
-      background: radial-gradient(ellipse at 50% 50%, #fff6d6 0%, #ffaa32 25%, #a85200 60%, #1a0800 100%);
+      /* Luxurious concave metallic reflection with electric blue light */
+      background: radial-gradient(ellipse at 50% 50%, #e6f0ff 0%, #0066ff 30%, #001a80 60%, #00031a 100%);
       box-shadow: inset 0 2px 10px rgba(0,0,0,0.9), inset 0 -2px 5px rgba(0,0,0,0.5); 
       transition: opacity var(--transition-time) ease;
     }
     .lamp-opening::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: #e0ddd8; box-shadow: inset 0 3px 10px rgba(0,0,0,0.1); opacity: 0; transition: opacity var(--transition-time) ease;
+      background: #e6e8eb; box-shadow: inset 0 3px 10px rgba(0,0,0,0.1); opacity: 0; transition: opacity var(--transition-time) ease;
     }
     body.light-mode .lamp-opening::before { opacity: 0; }
     body.light-mode .lamp-opening::after { opacity: 1; }
@@ -186,11 +193,12 @@
     }
     .pull-chain::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: repeating-linear-gradient(to bottom, #9a6d2f, #9a6d2f 2px, #4a3311 2px, #4a3311 4px); transition: opacity var(--transition-time) ease;
+      /* Silver pull chain instead of brass */
+      background: repeating-linear-gradient(to bottom, #8a8d91, #8a8d91 2px, #3a3c3f 2px, #3a3c3f 4px); transition: opacity var(--transition-time) ease;
     }
     .pull-chain::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: repeating-linear-gradient(to bottom, #808080, #808080 2px, #606060 2px, #606060 4px); opacity: 0; transition: opacity var(--transition-time) ease;
+      background: repeating-linear-gradient(to bottom, #606060, #606060 2px, #404040 2px, #404040 4px); opacity: 0; transition: opacity var(--transition-time) ease;
     }
     body.light-mode .pull-chain::before { opacity: 0; }
     body.light-mode .pull-chain::after { opacity: 1; }
@@ -200,10 +208,10 @@
       box-shadow: 0 5px 10px rgba(0,0,0,0.5);
     }
     .pull-chain-handle::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #9a6d2f, #d4a35f, #9a6d2f); transition: opacity var(--transition-time) ease;
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #8a8d91, #d0d3d6, #8a8d91); transition: opacity var(--transition-time) ease;
     }
     .pull-chain-handle::after {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #808080, #b0b0b0, #808080); opacity: 0; transition: opacity var(--transition-time) ease;
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #606060, #909090, #606060); opacity: 0; transition: opacity var(--transition-time) ease;
     }
     body.light-mode .pull-chain-handle::before { opacity: 0; }
     body.light-mode .pull-chain-handle::after { opacity: 1; }
@@ -214,13 +222,13 @@
     }
     .bulb::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #ffeaa1 40%, #ff8c00 100%);
-      box-shadow: 0 0 10px 2px rgba(255,140,0,0.8); 
+      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #b3d1ff 40%, #0066ff 100%);
+      box-shadow: 0 0 12px 3px rgba(0,102,255,0.8); 
       transition: opacity var(--transition-time) ease;
     }
     .bulb::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
-      background: #e8e8e8; box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), inset 2px 2px 5px rgba(255,255,255,0.8); 
+      background: #e6e8eb; box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), inset 2px 2px 5px rgba(255,255,255,0.8); 
       opacity: 0; transition: opacity var(--transition-time) ease;
     }
     body.light-mode .bulb::before { opacity: 0; }
@@ -250,8 +258,7 @@
 <body>
 
   <div class="text-container">
-    <div class="text-main">T A P &nbsp; T H E &nbsp; L A M P</div>
-    <div class="text-sub">( if you dare )</div>
+    <div class="text-main">I G N I T E</div>
   </div>
 
   <div class="ambient-glow"></div>
@@ -422,7 +429,7 @@
         
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 200, 100, ${p.currentOpacity})`;
+        ctx.fillStyle = `rgba(150, 200, 255, ${p.currentOpacity})`;
         ctx.fill();
       });
 
@@ -449,12 +456,12 @@
           const glowIntensity = Math.random() * 0.5 + 0.5;
           ctx.beginPath();
           ctx.arc(f.x, f.y, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 240, 150, ${glowIntensity})`;
+          ctx.fillStyle = `rgba(200, 230, 255, ${glowIntensity})`;
           ctx.fill();
           
           ctx.beginPath();
           ctx.arc(f.x, f.y, 6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 150, 0, ${glowIntensity * 0.25})`;
+          ctx.fillStyle = `rgba(0, 102, 255, ${glowIntensity * 0.25})`;
           ctx.fill();
         });
       }
