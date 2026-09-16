@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --transition-time: 1.2s;
+    }
+
+    body {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+      background-color: #080809;
+      color: #f0f0f0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      transition: background-color var(--transition-time) ease, color var(--transition-time) ease;
+      user-select: none; -webkit-user-select: none;
+    }
+
+    body.light-mode {
+      background-color: #f2efe9;
+    }
+
+    /* Ambient volumetric light */
+    .ambient-glow {
+      position: absolute; top: 30vh; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw; height: 100vw;
+      background: radial-gradient(circle, rgba(255, 140, 20, 0.12) 0%, rgba(255, 80, 0, 0.05) 30%, transparent 60%);
+      pointer-events: none; z-index: 1;
+      transition: opacity var(--transition-time) ease;
+      mix-blend-mode: screen;
+    }
+    body.light-mode .ambient-glow { opacity: 0; }
+
+    .vignette-dark, .vignette-light {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 9;
+      transition: opacity var(--transition-time) ease;
+    }
+    .vignette-dark {
+      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.9) 120%);
+    }
+    .vignette-light {
+      background: radial-gradient(circle at 50% 40%, transparent 20%, rgba(0,0,0,0.15) 120%);
+      opacity: 0;
+    }
+    body.light-mode .vignette-dark { opacity: 0; }
+    body.light-mode .vignette-light { opacity: 1; }
+
+    .grain-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 15; opacity: 0.05;
+      background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    }
+
+    #dust-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 10;
+      transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode #dust-canvas { opacity: 0; }
+
+    /* Texts */
+    .text-container {
+      position: absolute; bottom: 30%; left: 50%; transform: translateX(-50%); text-align: center;
+      color: rgba(255,255,255,0.6); transition: color var(--transition-time) ease; z-index: 20;
+    }
+    body.light-mode .text-container { color: rgba(0,0,0,0.6); }
+    .text-main { font-size: 12px; letter-spacing: 0.4em; margin-bottom: 15px; }
+    .text-sub { font-size: 10px; letter-spacing: 0.2em; opacity: 0.5; }
+
+    /* Lamp Structure */
+    .ceiling-mount {
+      position: absolute; top: 0; left: 50%; margin-left: -30px;
+      width: 60px; height: 15px; border-radius: 0 0 30px 30px; z-index: 21;
+    }
+    .ceiling-mount::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #0a0a0a; border-radius: inherit; transition: opacity var(--transition-time) ease;
+    }
+    .ceiling-mount::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #d4d1cb; border-radius: inherit; opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .ceiling-mount::before { opacity: 0; }
+    body.light-mode .ceiling-mount::after { opacity: 1; }
+
+    .lamp-container {
+      position: absolute; top: 0; left: 50%; width: 0; height: 0;
+      z-index: 20; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+
+    .string-hit-area {
+      position: absolute; top: 0; left: -30px; width: 60px; height: 30vh; background: transparent; z-index: 10;
+    }
+
+    .string {
+      position: absolute; top: 0; left: -1px; width: 2px; height: 30vh;
+    }
+    .string::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #1a1a1a; transition: opacity var(--transition-time) ease;
+    }
+    .string::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #a0a0a0; opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .string::before { opacity: 0; }
+    body.light-mode .string::after { opacity: 1; }
+
+    .lamp-head {
+      position: absolute; top: 30vh; left: -120px; width: 240px; height: 120px; z-index: 10;
+    }
+
+    .lamp-shadow {
+      position: absolute; top: 20px; left: 0; width: 100%; height: 100px;
+      border-radius: 120px 120px 0 0; background: rgba(0,0,0,0.15); filter: blur(15px);
+      z-index: -1; opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .lamp-shadow { opacity: 1; }
+
+    .stem {
+      position: absolute; top: -15px; left: 50%; margin-left: -10px;
+      width: 20px; height: 15px; z-index: 1;
+    }
+    .stem::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #0a0a0a; border-radius: 3px 3px 0 0; transition: opacity var(--transition-time) ease;
+    }
+    .stem::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; background: #d4d1cb; border-radius: 3px 3px 0 0; opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .stem::before { opacity: 0; }
+    body.light-mode .stem::after { opacity: 1; }
+
+    .lamp-shade {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 120px 120px 0 0; z-index: 2;
+    }
+    .lamp-shade::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+      border-radius: inherit; background: #0f0f0f; transition: opacity var(--transition-time) ease;
+    }
+    .lamp-shade::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+      border-radius: inherit; background: #eae7e0; box-shadow: inset 0 -10px 30px rgba(0,0,0,0.05); opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .lamp-shade::before { opacity: 0; }
+    body.light-mode .lamp-shade::after { opacity: 1; }
+
+    .lamp-opening {
+      position: absolute; top: 110px; left: 0; width: 100%; height: 20px; border-radius: 50%; z-index: 3;
+    }
+    .lamp-opening::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: #ff9d00; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); transition: opacity var(--transition-time) ease;
+    }
+    .lamp-opening::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: #e0ddd8; box-shadow: inset 0 3px 10px rgba(0,0,0,0.1); opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .lamp-opening::before { opacity: 0; }
+    body.light-mode .lamp-opening::after { opacity: 1; }
+
+    .bulb {
+      position: absolute; top: 105px; left: 50%; margin-left: -25px;
+      width: 50px; height: 50px; border-radius: 50%; z-index: 5;
+    }
+    .bulb::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #ffe3a1 50%, #ff8c00 100%);
+      box-shadow: 0 0 30px 10px rgba(255,140,0,0.9), 0 0 80px 30px rgba(255,80,0,0.4); 
+      transition: opacity var(--transition-time) ease;
+    }
+    .bulb::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit;
+      background: #e8e8e8; box-shadow: inset -4px -4px 10px rgba(0,0,0,0.1), inset 2px 2px 5px rgba(255,255,255,0.8); 
+      opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .bulb::before { opacity: 0; }
+    body.light-mode .bulb::after { opacity: 1; }
+
+    .light-cone {
+      position: absolute; top: 110px; left: -180px; width: 600px; height: 120vh;
+      background: linear-gradient(to bottom, rgba(255, 140, 20, 0.18) 0%, rgba(255, 100, 0, 0.03) 40%, transparent 100%);
+      clip-path: polygon(180px 0, 420px 0, 100% 100%, 0 100%); 
+      z-index: 0; pointer-events: none;
+      filter: blur(25px); /* Upgraded: Volumetric blur effect */
+      transform: scaleX(1.1); /* Compensate for blur edge shrinkage */
+      transition: opacity var(--transition-time) ease; mix-blend-mode: screen;
+    }
+    body.light-mode .light-cone { opacity: 0; }
+
+    .pull-chain {
+      position: absolute; top: 120px; left: 50%; margin-left: -1px; width: 2px; height: 120px;
+      z-index: 4; /* Upgraded: Behind the bulb */
+      transform-origin: top center;
+    }
+    .pull-chain::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+      background: repeating-linear-gradient(to bottom, #9a6d2f, #9a6d2f 2px, #4a3311 2px, #4a3311 4px); transition: opacity var(--transition-time) ease;
+    }
+    .pull-chain::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+      background: repeating-linear-gradient(to bottom, #808080, #808080 2px, #606060 2px, #606060 4px); opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .pull-chain::before { opacity: 0; }
+    body.light-mode .pull-chain::after { opacity: 1; }
+
+    .pull-chain-handle {
+      position: absolute; bottom: -20px; left: -3px; width: 8px; height: 25px; border-radius: 4px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5); /* Added subtle shadow for depth */
+    }
+    .pull-chain-handle::before {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #9a6d2f, #d4a35f, #9a6d2f); transition: opacity var(--transition-time) ease;
+    }
+    .pull-chain-handle::after {
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #808080, #b0b0b0, #808080); opacity: 0; transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .pull-chain-handle::before { opacity: 0; }
+    body.light-mode .pull-chain-handle::after { opacity: 1; }
+
+    /* Flicker Animation */
+    @keyframes flickerAnim {
+      0% { opacity: 0.1; }
+      10% { opacity: 1; }
+      20% { opacity: 0.2; }
+      30% { opacity: 1; }
+      45% { opacity: 0.5; }
+      60% { opacity: 1; }
+      80% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    .flicker-active .bulb::before,
+    .flicker-active .ambient-glow,
+    .flicker-active .lamp-opening::before,
+    .flicker-active .light-cone {
+      animation: flickerAnim 0.35s ease-out forwards;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="text-container">
+    <div class="text-main">T A P &nbsp; T H E &nbsp; L A M P</div>
+    <div class="text-sub">( if you dare )</div>
+  </div>
+
+  <div class="ambient-glow"></div>
+  <div class="vignette-dark"></div>
+  <div class="vignette-light"></div>
+  <div class="grain-overlay"></div>
+  <canvas id="dust-canvas"></canvas>
+
+  <div class="ceiling-mount"></div>
+  
+  <div class="lamp-container" id="lamp-container">
+    <div class="string-hit-area"></div>
+    <div class="string"></div>
+    
+    <div class="lamp-head" id="lamp-head">
+      <div class="lamp-shadow" id="lamp-shadow"></div>
+      <div class="light-cone"></div>
+      <div class="stem"></div>
+      <div class="lamp-shade"></div>
+      <div class="lamp-opening"></div>
+      <div class="pull-chain" id="pull-chain">
+        <div class="pull-chain-handle"></div>
+      </div>
+      <div class="bulb"></div> <!-- Moved bulb below pull-chain so it overlaps it correctly -->
+    </div>
+  </div>
+
+  <script>
+    // Audio Context Setup
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    let humOsc, humGain;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playClickSound() {
+      initAudio();
+      const t = audioCtx.currentTime;
+      
+      function snap(time) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+        
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(500, time);
+        osc.frequency.exponentialRampToValueAtTime(100, time + 0.04);
+        
+        filter.type = 'highpass';
+        filter.frequency.value = 800;
+        
+        gain.gain.setValueAtTime(0.3, time);
+        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.04);
+        
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(time);
+        osc.stop(time + 0.04);
+      }
+      
+      snap(t);
+      snap(t + 0.1); 
+    }
+
+    function toggleHum(isDark) {
+      initAudio();
+      if (isDark) {
+        humOsc = audioCtx.createOscillator();
+        humGain = audioCtx.createGain();
+        humOsc.type = 'sawtooth';
+        humOsc.frequency.value = 60;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 150;
+        
+        humGain.gain.setValueAtTime(0, audioCtx.currentTime);
+        humGain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 1);
+        
+        humOsc.connect(filter);
+        filter.connect(humGain);
+        humGain.connect(audioCtx.destination);
+        humOsc.start();
+      } else {
+        if (humGain) {
+          humGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+          setTimeout(() => { if (humOsc) humOsc.stop(); }, 350);
+        }
+      }
+    }
+
+    // Canvas Dust & Fireflies (Upgraded to react to mouse)
+    const canvas = document.getElementById('dust-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let fireflies = [];
+    const particleCount = 70;
+
+    let targetMouseX = window.innerWidth / 2;
+    let targetMouseY = window.innerHeight / 2;
+    document.addEventListener('mousemove', (e) => {
+      targetMouseX = e.clientX;
+      targetMouseY = e.clientY;
+    });
+
+    function initParticles() {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          radius: Math.random() * 1.5 + 0.3,
+          vx: (Math.random() - 0.5) * 0.2,
+          vy: (Math.random() - 0.5) * 0.2,
+          baseOpacity: Math.random() * 0.6 + 0.1,
+          currentOpacity: Math.random() * 0.6
+        });
+      }
+      fireflies = [];
+      for (let i = 0; i < 4; i++) {
+        fireflies.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 150,
+          y: window.innerHeight * 0.3 + (Math.random() - 0.5) * 150,
+          vx: 0, vy: 0, angle: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawDust() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const isDark = !document.body.classList.contains('light-mode');
+      
+      particles.forEach(p => {
+        // Upgraded: Particles repel from mouse
+        const dx = targetMouseX - p.x;
+        const dy = targetMouseY - p.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          const force = (120 - dist) / 120;
+          p.vx -= (dx / dist) * force * 0.1;
+          p.vy -= (dy / dist) * force * 0.1;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy - 0.15;
+        
+        // Friction
+        p.vx *= 0.99;
+        
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        
+        p.currentOpacity += (Math.random() - 0.5) * 0.04;
+        p.currentOpacity = Math.max(0, Math.min(p.baseOpacity, p.currentOpacity));
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 200, 100, ${p.currentOpacity})`;
+        ctx.fill();
+      });
+
+      if (isDark) {
+        const lampX = window.innerWidth / 2;
+        const lampY = window.innerHeight * 0.3 + 100;
+        
+        fireflies.forEach(f => {
+          const dx = lampX - f.x;
+          const dy = lampY - f.y;
+          
+          f.vx += dx * 0.0001;
+          f.vy += dy * 0.0001;
+          
+          f.angle += (Math.random() - 0.5) * 0.6;
+          f.vx += Math.cos(f.angle) * 0.2;
+          f.vy += Math.sin(f.angle) * 0.2;
+          
+          f.vx *= 0.95;
+          f.vy *= 0.95;
+          f.x += f.vx;
+          f.y += f.vy;
+          
+          const glowIntensity = Math.random() * 0.5 + 0.5;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 240, 150, ${glowIntensity})`;
+          ctx.fill();
+          
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 150, 0, ${glowIntensity * 0.25})`;
+          ctx.fill();
+        });
+      }
+    }
+
+    // Parallax and Physics
+    const lampContainer = document.getElementById('lamp-container');
+    const pullChain = document.getElementById('pull-chain');
+    const lampShadow = document.getElementById('lamp-shadow');
+    const ambientGlow = document.querySelector('.ambient-glow');
+
+    let lampParallaxAngle = 0;
+    
+    let angle = 0;
+    let angularVelocity = 0;
+    let angularAcceleration = 0;
+    let time = 0;
+    const gravity = 0.4;
+    const length = 80;
+    const damping = 0.98;
+
+    function animate() {
+      time += 0.016;
+      
+      const pX = (targetMouseX - window.innerWidth / 2);
+      const targetLampAngle = pX * -0.005;
+      lampParallaxAngle += (targetLampAngle - lampParallaxAngle) * 0.05;
+      lampContainer.style.transform = `rotate(${lampParallaxAngle}deg)`;
+
+      const pY = (targetMouseY - window.innerHeight / 2);
+      ambientGlow.style.transform = `translate(calc(-50% + ${pX * -0.05}px), calc(-50% + ${pY * -0.05}px))`;
+
+      if (document.body.classList.contains('light-mode')) {
+        const shadowX = pX * -0.08;
+        const shadowY = Math.max(pY * -0.08, 0);
+        lampShadow.style.transform = `translate(${shadowX}px, ${shadowY}px)`;
+      }
+
+      const breezeTarget = (Math.sin(time * 0.8) * Math.sin(time * 1.3 + 1)) * 0.04;
+      angularAcceleration = (-gravity / length) * Math.sin(angle - breezeTarget);
+      
+      angularVelocity += angularAcceleration;
+      angularVelocity *= damping;
+      angle += angularVelocity;
+      
+      pullChain.style.transform = `rotate(${angle * (180 / Math.PI)}deg)`;
+      
+      drawDust();
+      requestAnimationFrame(animate);
+    }
+
+    lampContainer.addEventListener('click', () => {
+      const isLight = document.body.classList.toggle('light-mode');
+      
+      playClickSound();
+      
+      if (!isLight) {
+        document.body.classList.remove('flicker-active');
+        void document.body.offsetWidth;
+        document.body.classList.add('flicker-active');
+        toggleHum(true);
+      } else {
+        document.body.classList.remove('flicker-active');
+        toggleHum(false);
+      }
+
+      const impulse = (Math.random() > 0.5 ? 1 : -1) * 0.05;
+      angularVelocity += impulse;
+      if (angularVelocity > 0.2) angularVelocity = 0.2;
+      if (angularVelocity < -0.2) angularVelocity = -0.2;
+    });
+
+    angularVelocity = 0.02;
+    animate();
+    
+    document.addEventListener('click', () => {
+      if (!document.body.classList.contains('light-mode') && !humOsc) {
+        toggleHum(true);
+      }
+    }, { once: true });
+  </script>
+</body>
+</html>
