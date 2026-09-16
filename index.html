@@ -17,50 +17,13 @@
       margin: 0; padding: 0;
       width: 100vw; height: 100vh;
       overflow: hidden;
-      background-color: #0c0a08;
+      background-color: #050505;
       transition: background-color var(--transition-time) ease;
       user-select: none; -webkit-user-select: none;
     }
 
     body.light-mode {
-      background-color: #1a1714;
-    }
-
-    /* Photorealistic Ribbed Wall */
-    .wall-texture {
-      position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: repeating-linear-gradient(
-        to right,
-        #050403 0px,
-        #14110e 3px,
-        #2a221a 6px,
-        #050403 9px,
-        #050403 14px
-      );
-      z-index: 0;
-      transition: opacity var(--transition-time) ease;
-    }
-    body.light-mode .wall-texture {
-      background: repeating-linear-gradient(
-        to right,
-        #15110d 0px,
-        #2a241c 3px,
-        #40352a 6px,
-        #15110d 9px,
-        #15110d 14px
-      );
-    }
-
-    /* Table Surface */
-    .table-surface {
-      position: absolute; bottom: 0; left: 0; width: 100vw; height: 18vh;
-      background: linear-gradient(to bottom, #140d0a, #050302);
-      border-top: 1px solid #221813;
-      z-index: 1;
-      transition: filter var(--transition-time) ease;
-    }
-    body.light-mode .table-surface {
-      background: linear-gradient(to bottom, #2b1c15, #0d0805);
+      background-color: #ffffff;
     }
 
     /* Ambient Glow on Wall */
@@ -84,20 +47,13 @@
     }
     body.light-mode .table-glow { opacity: 0; }
 
-    .vignette-dark, .vignette-light {
+    .vignette-dark {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none; z-index: 30;
       transition: opacity var(--transition-time) ease;
-    }
-    .vignette-dark {
       background: radial-gradient(circle at 50% 45%, transparent 10%, rgba(0,0,0,0.98) 100%);
     }
-    .vignette-light {
-      background: radial-gradient(circle at 50% 45%, transparent 10%, rgba(0,0,0,0.6) 100%);
-      opacity: 0;
-    }
     body.light-mode .vignette-dark { opacity: 0; }
-    body.light-mode .vignette-light { opacity: 1; }
 
     #dust-canvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -273,14 +229,11 @@
 </head>
 <body>
 
-  <div class="wall-texture"></div>
   <div class="vignette-dark"></div>
-  <div class="vignette-light"></div>
   <div class="grain-overlay"></div>
   <canvas id="dust-canvas"></canvas>
 
   <div class="wall-glow"></div>
-  <div class="table-surface"></div>
   <div class="table-glow"></div>
   
   <div class="lamp-container" id="lamp-container">
