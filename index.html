@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lumo - Luxury</title>
+  <title>Lumo - Vintage Wall Lantern</title>
   <style>
     :root {
       --transition-time: 1.2s;
-      --gold-light: #ffea75;
-      --gold-mid: #d4af37;
-      --gold-dark: #6e5c1e;
-      --gold-shadow: #2a2205;
     }
 
     body {
@@ -21,41 +17,14 @@
       background: radial-gradient(circle at 50% 50%, #1a1510 0%, #050403 100%);
       transition: background var(--transition-time) ease;
       user-select: none; -webkit-user-select: none;
+      color: #fff;
     }
 
     body.light-mode {
       /* Premium studio white seamless paper sweep */
       background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e8e6e1 100%);
+      color: #111;
     }
-
-    /* Ambient Glow on Wall */
-    .wall-glow {
-      position: absolute; bottom: 18vh; left: 50%; transform: translate(-50%, 45%);
-      width: 1200px; height: 900px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 200, 70, 0.25) 0%, rgba(255, 170, 40, 0.08) 35%, transparent 70%);
-      z-index: 1; pointer-events: none;
-      transition: opacity var(--transition-time) ease;
-    }
-    body.light-mode .wall-glow { opacity: 0; }
-
-    /* Table Glow */
-    .table-glow {
-      position: absolute; bottom: 18vh; left: 50%;
-      transform: translate(-50%, 50%) rotateX(75deg);
-      width: 900px; height: 900px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 210, 100, 0.4) 0%, rgba(200, 130, 30, 0.1) 40%, transparent 65%);
-      mix-blend-mode: screen; z-index: 2; pointer-events: none;
-      transition: opacity var(--transition-time) ease;
-    }
-    body.light-mode .table-glow { opacity: 0; }
-
-    .vignette-dark {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 30;
-      transition: opacity var(--transition-time) ease;
-      background: radial-gradient(circle at 50% 45%, transparent 10%, rgba(0,0,0,0.98) 100%);
-    }
-    body.light-mode .vignette-dark { opacity: 0; }
 
     #dust-canvas {
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -64,137 +33,71 @@
     }
     body.light-mode #dust-canvas { opacity: 0; }
 
-    /* Lamp Container */
-    .lamp-container {
-      position: absolute; bottom: 18vh; left: 50%; transform: translateX(-50%);
-      width: 320px; height: 600px;
+    /* The Massive Wall Lantern */
+    .lantern-container {
+      position: absolute; top: 15vh; right: 0;
+      width: 420px; height: 600px;
       z-index: 20; cursor: pointer; -webkit-tap-highlight-color: transparent;
+      filter: drop-shadow(-10px 20px 20px rgba(0,0,0,0.8));
+      transition: filter var(--transition-time) ease;
+    }
+    body.light-mode .lantern-container {
+      filter: drop-shadow(-10px 20px 20px rgba(0,0,0,0.2));
     }
 
-    .base-shadow {
-      position: absolute; bottom: -15px; left: 50%; margin-left: -120px;
-      width: 240px; height: 30px; border-radius: 50%;
-      background: rgba(0,0,0,0.8); filter: blur(15px);
-      z-index: 0; transition: background var(--transition-time) ease, opacity var(--transition-time) ease;
+    .lantern-svg {
+      width: 100%; height: 100%;
+      /* Base colors for the metal */
+      color: #ffd700; 
+      transition: color var(--transition-time) ease;
     }
-    .base-shadow::after {
-      content: ''; position: absolute; bottom: 8px; left: 50%; margin-left: -60px;
-      width: 120px; height: 12px; border-radius: 50%;
-      background: rgba(0,0,0,1); filter: blur(3px);
-    }
-    body.light-mode .base-shadow { background: rgba(0,0,0,0.25); }
-    body.light-mode .base-shadow::after { background: rgba(0,0,0,0.5); }
-
-    /* High-end Modern Matte Base */
-    .lamp-base {
-      position: absolute; bottom: 0; left: 50%; margin-left: -70px;
-      width: 140px; height: 35px; border-radius: 4px;
-      z-index: 1;
-      /* Matte Black */
-      background: linear-gradient(to right, #0a0a0a 0%, #2a2a2a 20%, #3a3a3a 40%, #1a1a1a 80%, #050505 100%);
-      box-shadow: inset 0 2px 2px rgba(255,255,255,0.1), inset 0 -2px 5px rgba(0,0,0,1), 0 5px 15px rgba(0,0,0,0.8);
-      transition: background var(--transition-time) ease, box-shadow var(--transition-time) ease;
-    }
-    body.light-mode .lamp-base { 
-      /* Matte White */
-      background: linear-gradient(to right, #d4d4d4 0%, #ffffff 20%, #f5f5f5 40%, #e0e0e0 80%, #c4c4c4 100%);
-      box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 5px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
+    body.light-mode .lantern-svg {
+      color: #222;
     }
 
-    /* Thick Modern Stem */
-    .lamp-stem {
-      position: absolute; bottom: 35px; left: 50%; margin-left: -15px;
-      width: 30px; height: 320px; z-index: 1;
-      background: linear-gradient(to right, #050505 0%, #2a2a2a 25%, #333 45%, #111 80%, #000 100%);
-      transition: background var(--transition-time) ease;
-    }
-    body.light-mode .lamp-stem { 
-      background: linear-gradient(to right, #c0c0c0 0%, #f5f5f5 25%, #ffffff 45%, #d9d9d9 80%, #b3b3b3 100%);
+    #lantern-body {
+      transform-origin: 35.7% 50%; /* x=50, y=100 in 140x200 viewBox */
     }
 
-    /* Soft Diffused Light Cone */
+    /* Beautiful Glowing Bulb */
+    .bulb {
+      fill: #ffeba8;
+      filter: drop-shadow(0 0 10px #ffaa00) drop-shadow(0 0 30px #ffaa00);
+      transition: opacity var(--transition-time) ease;
+    }
+    body.light-mode .bulb { opacity: 0; }
+    
+    .glass-pane {
+      fill: rgba(255, 230, 150, 0.15);
+      transition: fill var(--transition-time) ease;
+    }
+    body.light-mode .glass-pane { fill: rgba(0,0,0,0.05); }
+
+    /* Slanted Volumetric Light Cone attached to the swinging lantern */
     .light-cone {
-      position: absolute; top: 180px; left: 50%; margin-left: -350px;
-      width: 700px; height: 420px;
-      background: linear-gradient(to bottom, rgba(255, 235, 180, 0.5) 0%, rgba(255, 200, 100, 0.05) 80%, transparent 100%);
+      position: absolute; top: 300px; left: 0px;
+      width: 300px; height: 600px;
+      background: linear-gradient(to bottom, transparent 165px, rgba(255, 220, 100, 0.45) 165px, rgba(255, 170, 30, 0.05) 80%, transparent 100%);
       
-      /* Soft conic mask */
-      -webkit-mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.1) 10deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 90deg, rgba(0,0,0,0.1) 110deg, transparent 120deg);
-      mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.1) 10deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 90deg, rgba(0,0,0,0.1) 110deg, transparent 120deg);
+      /* Cone mask starting at bulb location (165px down from pivot) */
+      -webkit-mask-image: conic-gradient(from 150deg at 50% 165px, transparent 0deg, rgba(0,0,0,0.2) 15deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 60deg, rgba(0,0,0,0.2) 75deg, transparent 90deg);
+      mask-image: conic-gradient(from 150deg at 50% 165px, transparent 0deg, rgba(0,0,0,0.2) 15deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 60deg, rgba(0,0,0,0.2) 75deg, transparent 90deg);
       
-      z-index: 5; pointer-events: none; mix-blend-mode: screen;
+      pointer-events: none; mix-blend-mode: screen;
+      transform-origin: 150px 0px;
       transition: opacity var(--transition-time) ease;
     }
     body.light-mode .light-cone { opacity: 0; }
 
-    /* Ambient Core Glow */
+    /* Wall Core Glow */
     .core-glow {
-      position: absolute; top: 195px; left: 50%; margin-left: -100px;
-      width: 200px; height: 30px; border-radius: 50%;
-      background: #fff8de; filter: blur(20px);
-      z-index: 6; pointer-events: none; mix-blend-mode: screen;
+      position: absolute; top: 50%; right: 50px; transform: translateY(-50%);
+      width: 400px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 200, 50, 0.15) 0%, transparent 70%);
+      z-index: 1; pointer-events: none; mix-blend-mode: screen;
       transition: opacity var(--transition-time) ease;
     }
     body.light-mode .core-glow { opacity: 0; }
-
-    /* Perfectly Smooth Modern Dome Shade */
-    .lamp-shade {
-      position: absolute; top: 35px; left: 50%; margin-left: -160px;
-      width: 320px; height: 160px; z-index: 10;
-      /* Perfect hemisphere */
-      border-radius: 160px 160px 0 0;
-      
-      background: linear-gradient(to right, #0a0a0a 0%, #2a2a2a 35%, #3a3a3a 50%, #1a1a1a 85%, #050505 100%);
-      box-shadow: inset 0 2px 5px rgba(255,255,255,0.05);
-      transition: background var(--transition-time) ease;
-    }
-    /* Bottom rim highlight */
-    .lamp-shade::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
-      background: rgba(255,255,255,0.1);
-    }
-    body.light-mode .lamp-shade { 
-      background: linear-gradient(to right, #c4c4c4 0%, #f5f5f5 35%, #ffffff 50%, #e0e0e0 85%, #b3b3b3 100%);
-      box-shadow: inset 0 2px 5px rgba(255,255,255,1), 0 10px 30px rgba(0,0,0,0.05);
-    }
-    body.light-mode .lamp-shade::after { background: rgba(0,0,0,0.05); }
-
-    /* Frosted Acrylic Diffuser (Under the Shade) */
-    .lamp-opening {
-      position: absolute; top: 180px; left: 50%; margin-left: -155px;
-      width: 310px; height: 30px; border-radius: 50%; z-index: 9;
-      background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, #ffebb3 40%, #ffa600 100%);
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 5px 15px rgba(255, 180, 50, 0.4);
-      transition: opacity var(--transition-time) ease, box-shadow var(--transition-time) ease;
-    }
-    /* When off (light mode), it looks like opaque white acrylic */
-    body.light-mode .lamp-opening { 
-      background: #f8f8f8;
-      box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    /* Minimalist Pull Cord */
-    .pull-chain {
-      position: absolute; top: 195px; left: 50%; margin-left: -1px; width: 2px; height: 110px;
-      z-index: 4; transform-origin: top center;
-    }
-    .pull-chain::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: #2a2a2a; transition: background var(--transition-time) ease;
-    }
-    body.light-mode .pull-chain::before { background: #b3b3b3; }
-
-    .pull-chain-handle {
-      position: absolute; bottom: -20px; left: -3px; width: 8px; height: 25px; border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-    }
-    .pull-chain-handle::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; 
-      background: linear-gradient(to right, #111, #444, #111); transition: background var(--transition-time) ease;
-    }
-    body.light-mode .pull-chain-handle::before { 
-      background: linear-gradient(to right, #aaa, #e0e0e0, #aaa); box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
 
     /* Flicker Animation */
     @keyframes flickerAnim {
@@ -207,9 +110,7 @@
       80% { opacity: 0.8; }
       100% { opacity: 1; }
     }
-    .flicker-active .table-glow,
-    .flicker-active .wall-glow,
-    .flicker-active .lamp-opening,
+    .flicker-active .bulb,
     .flicker-active .core-glow,
     .flicker-active .light-cone {
       animation: flickerAnim 0.35s ease-out forwards;
@@ -219,27 +120,65 @@
 </head>
 <body>
 
-  <div class="vignette-dark"></div>
-  <div class="grain-overlay"></div>
   <canvas id="dust-canvas"></canvas>
-
-  <div class="wall-glow"></div>
-  <div class="table-glow"></div>
+  <div class="core-glow"></div>
   
-  <div class="lamp-container" id="lamp-container">
-    <div class="base-shadow"></div>
-    <div class="lamp-base"></div>
-    <div class="lamp-stem"></div>
-    
-    <div class="light-cone"></div>
-    <div class="core-glow"></div>
-    
-    <div class="lamp-shade"></div>
-    <div class="lamp-opening"></div>
-    
-    <div class="pull-chain" id="pull-chain">
-      <div class="pull-chain-handle"></div>
-    </div>
+  <div class="lantern-container" id="lamp-container">
+    <svg 
+      class="lantern-svg"
+      viewBox="0 0 140 200" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg" 
+    >
+      <!-- Static Wall Mount Plate & Bracket -->
+      <g class="bracket">
+        <!-- Wall Plate -->
+        <rect x="130" y="10" width="10" height="120" rx="2" fill="currentColor" opacity="0.9" />
+        
+        <!-- Main Ornate Bracket -->
+        <path 
+          d="M 130 25 C 70 25, 50 60, 50 100 C 50 120, 80 130, 100 110 C 110 100, 105 85, 95 85" 
+          stroke="currentColor" 
+          stroke-width="6" 
+          stroke-linecap="round" 
+        />
+        <!-- Secondary Bracket Swirl -->
+        <path 
+          d="M 130 80 C 100 80, 90 100, 100 120 C 110 130, 125 125, 125 110" 
+          stroke="currentColor" 
+          stroke-width="3" 
+          stroke-linecap="round" 
+        />
+      </g>
+      
+      <!-- Hanging Lantern Body (this swings) -->
+      <g id="lantern-body">
+        <!-- Connecting rod -->
+        <line x1="50" y1="100" x2="50" y2="115" stroke="currentColor" stroke-width="4" />
+        
+        <!-- Lantern Cap -->
+        <path d="M 25 130 L 75 130 L 60 115 L 40 115 Z" fill="currentColor" />
+        <path d="M 20 135 L 80 135 L 75 130 L 25 130 Z" fill="currentColor" />
+        
+        <!-- Lantern Glass Body -->
+        <path d="M 25 135 L 75 135 L 65 180 L 35 180 Z" class="glass-pane" />
+        
+        <!-- The Bulb! -->
+        <circle cx="50" cy="155" r="8" class="bulb" />
+
+        <!-- Glass Panes / Frame -->
+        <path d="M 32 135 L 42 180 M 68 135 L 58 180" stroke="currentColor" stroke-width="2" />
+        
+        <!-- Lantern Bottom -->
+        <path d="M 35 180 L 65 180 L 60 190 L 40 190 Z" fill="currentColor" />
+        <circle cx="50" cy="195" r="4" fill="currentColor" />
+
+        <!-- The Light Cone is injected inside the SVG coordinate space using foreignObject or just CSS on a div? 
+             Actually, mapping a CSS div to SVG coordinates is tricky. Let's just put the light cone div over it. -->
+      </g>
+    </svg>
+    <!-- We place the light cone absolutely within the lantern container so we can swing it perfectly matching the SVG -->
+    <div id="light-cone" class="light-cone"></div>
   </div>
 
   <script>
@@ -256,32 +195,20 @@
     function playClickSound() {
       initAudio();
       const t = audioCtx.currentTime;
-      
       function snap(time) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         const filter = audioCtx.createBiquadFilter();
-        
         osc.type = 'square';
-        osc.frequency.setValueAtTime(500, time);
-        osc.frequency.exponentialRampToValueAtTime(100, time + 0.04);
-        
-        filter.type = 'highpass';
-        filter.frequency.value = 800;
-        
-        gain.gain.setValueAtTime(0.3, time);
-        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.04);
-        
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        osc.start(time);
-        osc.stop(time + 0.04);
+        osc.frequency.setValueAtTime(400, time);
+        osc.frequency.exponentialRampToValueAtTime(80, time + 0.05);
+        filter.type = 'highpass'; filter.frequency.value = 800;
+        gain.gain.setValueAtTime(0.4, time);
+        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.05);
+        osc.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(time); osc.stop(time + 0.05);
       }
-      
-      snap(t);
-      snap(t + 0.1); 
+      snap(t); snap(t + 0.08); 
     }
 
     function toggleHum(isDark) {
@@ -291,17 +218,11 @@
         humGain = audioCtx.createGain();
         humOsc.type = 'sawtooth';
         humOsc.frequency.value = 60;
-        
         const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.value = 150;
-        
+        filter.type = 'lowpass'; filter.frequency.value = 150;
         humGain.gain.setValueAtTime(0, audioCtx.currentTime);
         humGain.gain.linearRampToValueAtTime(0.015, audioCtx.currentTime + 1);
-        
-        humOsc.connect(filter);
-        filter.connect(humGain);
-        humGain.connect(audioCtx.destination);
+        humOsc.connect(filter); filter.connect(humGain); humGain.connect(audioCtx.destination);
         humOsc.start();
       } else {
         if (humGain) {
@@ -311,18 +232,16 @@
       }
     }
 
-    // Canvas Dust & Fireflies
+    // Canvas Dust
     const canvas = document.getElementById('dust-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    let fireflies = [];
-    const particleCount = 70;
+    const particleCount = 80;
 
     let targetMouseX = window.innerWidth / 2;
     let targetMouseY = window.innerHeight / 2;
     document.addEventListener('mousemove', (e) => {
-      targetMouseX = e.clientX;
-      targetMouseY = e.clientY;
+      targetMouseX = e.clientX; targetMouseY = e.clientY;
     });
 
     function initParticles() {
@@ -338,14 +257,6 @@
           currentOpacity: Math.random() * 0.6
         });
       }
-      fireflies = [];
-      for (let i = 0; i < 4; i++) {
-        fireflies.push({
-          x: window.innerWidth / 2 + (Math.random() - 0.5) * 150,
-          y: window.innerHeight * 0.4 + (Math.random() - 0.5) * 150,
-          vx: 0, vy: 0, angle: Math.random() * Math.PI * 2
-        });
-      }
     }
 
     function resizeCanvas() {
@@ -358,21 +269,17 @@
 
     function drawDust() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const isDark = !document.body.classList.contains('light-mode');
-      
       particles.forEach(p => {
         const dx = targetMouseX - p.x;
         const dy = targetMouseY - p.y;
         const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120;
-          p.vx -= (dx / dist) * force * 0.1;
-          p.vy -= (dy / dist) * force * 0.1;
+        if (dist < 150) {
+          const force = (150 - dist) / 150;
+          p.vx -= (dx / dist) * force * 0.05;
+          p.vy -= (dy / dist) * force * 0.05;
         }
-
-        p.x += p.vx;
-        p.y += p.vy - 0.15;
-        p.vx *= 0.99;
+        p.x += p.vx; p.y += p.vy - 0.15;
+        p.vx *= 0.99; p.vy *= 0.99;
         
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
@@ -384,56 +291,23 @@
         
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        // Golden dust
         ctx.fillStyle = `rgba(255, 200, 100, ${p.currentOpacity})`;
         ctx.fill();
       });
-
-      if (isDark) {
-        const lampX = window.innerWidth / 2;
-        const lampY = window.innerHeight * 0.45;
-        
-        fireflies.forEach(f => {
-          const dx = lampX - f.x;
-          const dy = lampY - f.y;
-          
-          f.vx += dx * 0.0001;
-          f.vy += dy * 0.0001;
-          
-          f.angle += (Math.random() - 0.5) * 0.6;
-          f.vx += Math.cos(f.angle) * 0.2;
-          f.vy += Math.sin(f.angle) * 0.2;
-          
-          f.vx *= 0.95;
-          f.vy *= 0.95;
-          f.x += f.vx;
-          f.y += f.vy;
-          
-          const glowIntensity = Math.random() * 0.5 + 0.5;
-          ctx.beginPath();
-          ctx.arc(f.x, f.y, 1.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 240, 150, ${glowIntensity})`;
-          ctx.fill();
-          
-          ctx.beginPath();
-          ctx.arc(f.x, f.y, 6, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 150, 0, ${glowIntensity * 0.25})`;
-          ctx.fill();
-        });
-      }
     }
 
-    // Parallax and Physics for the Pull Chain
+    // Physics Engine for the SVG Lantern Body
     const lampContainer = document.getElementById('lamp-container');
-    const pullChain = document.getElementById('pull-chain');
+    const lanternBody = document.getElementById('lantern-body');
+    const lightCone = document.getElementById('light-cone');
 
     let angle = 0;
     let angularVelocity = 0;
     let angularAcceleration = 0;
     let time = 0;
     const gravity = 0.4;
-    const length = 80;
-    const damping = 0.98;
+    const length = 120;
+    const damping = 0.97;
 
     function animate() {
       time += 0.016;
@@ -445,15 +319,31 @@
       angularVelocity *= damping;
       angle += angularVelocity;
       
-      pullChain.style.transform = `rotate(${angle * (180 / Math.PI)}deg)`;
+      // Swing the SVG group!
+      const angleDeg = angle * (180 / Math.PI);
+      lanternBody.style.transform = `rotate(${angleDeg}deg)`;
+      
+      // Swing the CSS light cone to match!
+      // The light cone is placed relative to the lantern container.
+      // We need to offset its origin to exactly match the SVG pivot point (x=50, y=100)
+      // Since container is 420x600 mapping to 140x200 viewBox: scale is 3x.
+      // SVG pivot x=50, y=100 -> CSS pivot x=150px, y=300px
+      // Light cone top is placed at y=300px.
+      lightCone.style.transform = `rotate(${angleDeg}deg)`;
       
       drawDust();
       requestAnimationFrame(animate);
     }
 
+    // Set accurate pivot for light cone
+    lightCone.style.top = '300px'; 
+    lightCone.style.left = '0px'; 
+    lightCone.style.width = '300px';
+    lightCone.style.marginLeft = '0px'; // clear previous margins
+    lightCone.style.transformOrigin = '150px 0px'; // Pivot at center top
+
     lampContainer.addEventListener('click', () => {
       const isLight = document.body.classList.toggle('light-mode');
-      
       playClickSound();
       
       if (!isLight) {
@@ -466,13 +356,11 @@
         toggleHum(false);
       }
 
-      const impulse = (Math.random() > 0.5 ? 1 : -1) * 0.05;
+      const impulse = (Math.random() > 0.5 ? 1 : -1) * 0.1;
       angularVelocity += impulse;
-      if (angularVelocity > 0.2) angularVelocity = 0.2;
-      if (angularVelocity < -0.2) angularVelocity = -0.2;
     });
 
-    angularVelocity = 0.02;
+    angularVelocity = 0.05;
     animate();
     
     document.addEventListener('click', () => {
