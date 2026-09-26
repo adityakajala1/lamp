@@ -85,55 +85,42 @@
     body.light-mode .base-shadow { background: rgba(0,0,0,0.25); }
     body.light-mode .base-shadow::after { background: rgba(0,0,0,0.5); }
 
-    /* High-end Photorealistic Brass Base */
+    /* High-end Modern Matte Base */
     .lamp-base {
-      position: absolute; bottom: 0; left: 50%; margin-left: -65px;
-      width: 130px; height: 22px; border-radius: 8px;
+      position: absolute; bottom: 0; left: 50%; margin-left: -70px;
+      width: 140px; height: 35px; border-radius: 4px;
       z-index: 1;
-      background: linear-gradient(to right, #241800 0%, #735100 15%, #ffdb4d 30%, #fff7cc 45%, #e6a800 65%, #8a6200 85%, #241800 100%);
-      box-shadow: inset 0 2px 3px rgba(255,255,255,0.7), inset 0 -4px 8px rgba(0,0,0,0.8), 0 6px 12px rgba(0,0,0,0.9);
-      transition: filter var(--transition-time) ease;
+      /* Matte Black */
+      background: linear-gradient(to right, #0a0a0a 0%, #2a2a2a 20%, #3a3a3a 40%, #1a1a1a 80%, #050505 100%);
+      box-shadow: inset 0 2px 2px rgba(255,255,255,0.1), inset 0 -2px 5px rgba(0,0,0,1), 0 5px 15px rgba(0,0,0,0.8);
+      transition: background var(--transition-time) ease, box-shadow var(--transition-time) ease;
     }
-    body.light-mode .lamp-base { filter: brightness(0.4); }
-
-    /* Base Ridge (adds physical detailing) */
-    .lamp-base::after {
-      content: ''; position: absolute; bottom: 100%; left: 50%; margin-left: -50px;
-      width: 100px; height: 6px; border-radius: 4px 4px 0 0;
-      background: linear-gradient(to right, #1a1100, #d9a01a, #fff2b3, #b38200, #1a1100);
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.9);
+    body.light-mode .lamp-base { 
+      /* Matte White */
+      background: linear-gradient(to right, #d4d4d4 0%, #ffffff 20%, #f5f5f5 40%, #e0e0e0 80%, #c4c4c4 100%);
+      box-shadow: inset 0 2px 2px rgba(255,255,255,1), inset 0 -2px 5px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* Machined Brass Stem Collar (replaces the cartoon rings) */
-    .stem-collar {
-      position: absolute; bottom: 28px; left: 50%; margin-left: -12px;
-      width: 24px; height: 80px; border-radius: 3px; z-index: 2;
-      background: linear-gradient(to right, #1f1400 0%, #b38200 25%, #ffeba8 50%, #996e00 75%, #1f1400 100%);
-      /* Machined grooves */
-      background-image: repeating-linear-gradient(to bottom, transparent, transparent 3px, rgba(0,0,0,0.5) 3px, rgba(0,0,0,0.5) 5px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.7);
-      transition: filter var(--transition-time) ease;
-    }
-    body.light-mode .stem-collar { filter: brightness(0.4); }
-
-    /* Thin Gold Stem */
+    /* Thick Modern Stem */
     .lamp-stem {
-      position: absolute; bottom: 28px; left: 50%; margin-left: -4px;
-      width: 8px; height: 380px; z-index: 1;
-      background: linear-gradient(to right, #1a1100 0%, #b38200 20%, #fff7cc 45%, #996e00 75%, #1a1100 100%);
-      transition: filter var(--transition-time) ease;
+      position: absolute; bottom: 35px; left: 50%; margin-left: -15px;
+      width: 30px; height: 320px; z-index: 1;
+      background: linear-gradient(to right, #050505 0%, #2a2a2a 25%, #333 45%, #111 80%, #000 100%);
+      transition: background var(--transition-time) ease;
     }
-    body.light-mode .lamp-stem { filter: brightness(0.4); }
+    body.light-mode .lamp-stem { 
+      background: linear-gradient(to right, #c0c0c0 0%, #f5f5f5 25%, #ffffff 45%, #d9d9d9 80%, #b3b3b3 100%);
+    }
 
-    /* Soft Photorealistic Light Cone */
+    /* Soft Diffused Light Cone */
     .light-cone {
       position: absolute; top: 180px; left: 50%; margin-left: -350px;
       width: 700px; height: 420px;
-      background: linear-gradient(to bottom, rgba(255, 220, 100, 0.45) 0%, rgba(255, 170, 30, 0.05) 80%, transparent 100%);
+      background: linear-gradient(to bottom, rgba(255, 235, 180, 0.5) 0%, rgba(255, 200, 100, 0.05) 80%, transparent 100%);
       
-      /* Soft conic mask instead of hard clip-path for realistic light falloff */
-      -webkit-mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.2) 15deg, rgba(0,0,0,1) 35deg, rgba(0,0,0,1) 85deg, rgba(0,0,0,0.2) 105deg, transparent 120deg);
-      mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.2) 15deg, rgba(0,0,0,1) 35deg, rgba(0,0,0,1) 85deg, rgba(0,0,0,0.2) 105deg, transparent 120deg);
+      /* Soft conic mask */
+      -webkit-mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.1) 10deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 90deg, rgba(0,0,0,0.1) 110deg, transparent 120deg);
+      mask-image: conic-gradient(from 120deg at 50% -10%, transparent 0deg, rgba(0,0,0,0.1) 10deg, rgba(0,0,0,1) 30deg, rgba(0,0,0,1) 90deg, rgba(0,0,0,0.1) 110deg, transparent 120deg);
       
       z-index: 5; pointer-events: none; mix-blend-mode: screen;
       transition: opacity var(--transition-time) ease;
@@ -142,77 +129,72 @@
 
     /* Ambient Core Glow */
     .core-glow {
-      position: absolute; top: 185px; left: 50%; margin-left: -80px;
-      width: 160px; height: 40px; border-radius: 50%;
-      background: #ffeba8; filter: blur(20px);
+      position: absolute; top: 195px; left: 50%; margin-left: -100px;
+      width: 200px; height: 30px; border-radius: 50%;
+      background: #fff8de; filter: blur(20px);
       z-index: 6; pointer-events: none; mix-blend-mode: screen;
       transition: opacity var(--transition-time) ease;
     }
     body.light-mode .core-glow { opacity: 0; }
 
-    /* Realistic Fabric Lamp Shade */
+    /* Perfectly Smooth Modern Dome Shade */
     .lamp-shade {
-      position: absolute; top: 10px; left: 50%; margin-left: -130px;
-      width: 260px; height: 185px; z-index: 10;
-      clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+      position: absolute; top: 35px; left: 50%; margin-left: -160px;
+      width: 320px; height: 160px; z-index: 10;
+      /* Perfect hemisphere */
+      border-radius: 160px 160px 0 0;
       
-      /* Base fabric gradient with dramatic physical curve shading */
-      background: linear-gradient(to right, #0d0c0a 0%, #2b2823 40%, #3d3932 60%, #171512 100%);
-      transition: filter var(--transition-time) ease;
+      background: linear-gradient(to right, #0a0a0a 0%, #2a2a2a 35%, #3a3a3a 50%, #1a1a1a 85%, #050505 100%);
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.05);
+      transition: background var(--transition-time) ease;
     }
-    /* Inner light spill onto the fabric */
-    .lamp-shade::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 50% 100%, rgba(255, 200, 80, 0.4) 0%, transparent 70%);
-      transition: opacity var(--transition-time) ease;
-    }
-    /* SVG Noise layer for fabric weave texture */
+    /* Bottom rim highlight */
     .lamp-shade::after {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
-      opacity: 0.15; mix-blend-mode: multiply; pointer-events: none;
+      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
+      background: rgba(255,255,255,0.1);
     }
-    body.light-mode .lamp-shade { filter: brightness(0.3); }
-    body.light-mode .lamp-shade::before { opacity: 0; }
-
-    /* Glowing Bottom Rim */
-    .shade-rim {
-      position: absolute; top: 193px; left: 50%; margin-left: -130px;
-      width: 260px; height: 3px; z-index: 11;
-      background: #fffbe6;
-      box-shadow: 0 1px 4px #ffe16b, 0 4px 15px #ffaa00;
-      transition: opacity var(--transition-time) ease;
+    body.light-mode .lamp-shade { 
+      background: linear-gradient(to right, #c4c4c4 0%, #f5f5f5 35%, #ffffff 50%, #e0e0e0 85%, #b3b3b3 100%);
+      box-shadow: inset 0 2px 5px rgba(255,255,255,1), 0 10px 30px rgba(0,0,0,0.05);
     }
-    body.light-mode .shade-rim { opacity: 0; }
+    body.light-mode .lamp-shade::after { background: rgba(0,0,0,0.05); }
 
-    /* Refined Pull Chain */
+    /* Frosted Acrylic Diffuser (Under the Shade) */
+    .lamp-opening {
+      position: absolute; top: 180px; left: 50%; margin-left: -155px;
+      width: 310px; height: 30px; border-radius: 50%; z-index: 9;
+      background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, #ffebb3 40%, #ffa600 100%);
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.2), 0 5px 15px rgba(255, 180, 50, 0.4);
+      transition: opacity var(--transition-time) ease, box-shadow var(--transition-time) ease;
+    }
+    /* When off (light mode), it looks like opaque white acrylic */
+    body.light-mode .lamp-opening { 
+      background: #f8f8f8;
+      box-shadow: inset 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    /* Minimalist Pull Cord */
     .pull-chain {
-      position: absolute; top: 195px; left: 50%; margin-left: -1px; width: 2px; height: 90px;
+      position: absolute; top: 195px; left: 50%; margin-left: -1px; width: 2px; height: 110px;
       z-index: 4; transform-origin: top center;
     }
     .pull-chain::before {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: repeating-linear-gradient(to bottom, #d4af37, #d4af37 2px, #6e5c1e 2px, #6e5c1e 4px); transition: opacity var(--transition-time) ease;
+      background: #2a2a2a; transition: background var(--transition-time) ease;
     }
-    .pull-chain::after {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: repeating-linear-gradient(to bottom, #555, #555 2px, #333 2px, #333 4px); opacity: 0; transition: opacity var(--transition-time) ease;
-    }
-    body.light-mode .pull-chain::before { opacity: 0; }
-    body.light-mode .pull-chain::after { opacity: 1; }
+    body.light-mode .pull-chain::before { background: #b3b3b3; }
 
     .pull-chain-handle {
-      position: absolute; bottom: -15px; left: -3px; width: 8px; height: 20px; border-radius: 4px;
+      position: absolute; bottom: -20px; left: -3px; width: 8px; height: 25px; border-radius: 10px;
       box-shadow: 0 3px 6px rgba(0,0,0,0.5);
     }
     .pull-chain-handle::before {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #d4af37, #ffea75, #d4af37); transition: opacity var(--transition-time) ease;
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; 
+      background: linear-gradient(to right, #111, #444, #111); transition: background var(--transition-time) ease;
     }
-    .pull-chain-handle::after {
-      content:''; position:absolute; top:0; left:0; width:100%; height:100%; border-radius: inherit; background: linear-gradient(to right, #666, #999, #666); opacity: 0; transition: opacity var(--transition-time) ease;
+    body.light-mode .pull-chain-handle::before { 
+      background: linear-gradient(to right, #aaa, #e0e0e0, #aaa); box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
-    body.light-mode .pull-chain-handle::before { opacity: 0; }
-    body.light-mode .pull-chain-handle::after { opacity: 1; }
 
     /* Flicker Animation */
     @keyframes flickerAnim {
@@ -227,7 +209,7 @@
     }
     .flicker-active .table-glow,
     .flicker-active .wall-glow,
-    .flicker-active .shade-rim,
+    .flicker-active .lamp-opening,
     .flicker-active .core-glow,
     .flicker-active .light-cone {
       animation: flickerAnim 0.35s ease-out forwards;
@@ -247,14 +229,13 @@
   <div class="lamp-container" id="lamp-container">
     <div class="base-shadow"></div>
     <div class="lamp-base"></div>
-    <div class="stem-collar"></div>
     <div class="lamp-stem"></div>
     
     <div class="light-cone"></div>
     <div class="core-glow"></div>
     
     <div class="lamp-shade"></div>
-    <div class="shade-rim"></div>
+    <div class="lamp-opening"></div>
     
     <div class="pull-chain" id="pull-chain">
       <div class="pull-chain-handle"></div>
