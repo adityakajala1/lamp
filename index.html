@@ -12,7 +12,7 @@
       --transition-time: 0.85s;
       
       /* Dark Theme: Deep Obsidian Charcoal & Gilded Antique Brass */
-      --bg-radial: radial-gradient(circle at 50% 42%, #1c1813 0%, #0a0807 58%, #030302 100%);
+      --bg-radial: radial-gradient(circle at 50% 46%, #1c1712 0%, #0a0807 58%, #030302 100%);
       --text-pri: #f5eedb;
       --text-sec: rgba(245, 238, 219, 0.5);
       --text-dim: rgba(245, 238, 219, 0.22);
@@ -23,7 +23,7 @@
 
     body.light-mode {
       /* Light Theme: Gallery Alabaster & Brushed Champagne Bronze */
-      --bg-radial: radial-gradient(circle at 50% 42%, #ffffff 0%, #f6f3ed 52%, #e5e0d6 100%);
+      --bg-radial: radial-gradient(circle at 50% 46%, #ffffff 0%, #f6f3ed 52%, #e5e0d6 100%);
       --text-pri: #1a1714;
       --text-sec: rgba(26, 23, 20, 0.6);
       --text-dim: rgba(26, 23, 20, 0.28);
@@ -51,16 +51,16 @@
       cursor: default;
     }
 
-    /* Centered Ambient Wall Glow */
+    /* Ambient Wall Glow */
     .wall-glow {
       position: absolute;
-      top: 48%;
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 860px;
-      height: 860px;
+      width: 880px;
+      height: 880px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 195, 80, 0.22) 0%, rgba(255, 150, 40, 0.07) 36%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 195, 80, 0.24) 0%, rgba(255, 150, 40, 0.08) 38%, transparent 70%);
       pointer-events: none;
       z-index: 2;
       mix-blend-mode: screen;
@@ -71,16 +71,16 @@
       opacity: 0;
     }
 
-    /* Centered Floor Ambient Reflection */
+    /* Floor Reflection */
     .floor-reflection {
       position: absolute;
       bottom: -60px;
       left: 50%;
       transform: translateX(-50%) rotateX(65deg);
-      width: 720px;
-      height: 280px;
+      width: 760px;
+      height: 290px;
       border-radius: 50%;
-      background: radial-gradient(ellipse at 50% 50%, rgba(255, 210, 110, 0.22) 0%, rgba(255, 160, 40, 0.05) 45%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 50%, rgba(255, 210, 110, 0.24) 0%, rgba(255, 160, 40, 0.06) 45%, transparent 70%);
       pointer-events: none;
       z-index: 2;
       mix-blend-mode: screen;
@@ -106,7 +106,7 @@
       opacity: 0;
     }
 
-    /* Minimalist Gallery HUD */
+    /* Gallery Framing HUD */
     .hud {
       position: absolute;
       top: 0;
@@ -116,7 +116,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 42px 48px;
+      padding: 38px 46px;
       pointer-events: none;
       z-index: 25;
     }
@@ -227,14 +227,15 @@
       50% { opacity: 1; transform: scale(1.4); }
     }
 
-    /* CENTERED FIXTURE STAGE */
+    /* CENTERED FIXTURE STAGE (Prominent, Heroic, Close-up) */
     .fixture-stage {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 380px;
-      height: 740px;
+      width: 480px;
+      height: 720px;
+      max-height: 94vh;
       z-index: 20;
       cursor: grab;
       -webkit-tap-highlight-color: transparent;
@@ -243,15 +244,16 @@
       cursor: grabbing;
     }
 
-    /* Dynamic Cast Shadow on Wall */
+    /* Wall Cast Shadow (Synchronized with Pendulum) */
     .fixture-shadow {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 380px;
-      height: 740px;
-      opacity: 0.6;
+      width: 480px;
+      height: 720px;
+      max-height: 94vh;
+      opacity: 0.55;
       filter: blur(28px);
       pointer-events: none;
       z-index: 5;
@@ -262,34 +264,36 @@
       filter: blur(22px);
     }
 
-    /* Main SVG Fixture */
+    /* Main SVG Canvas */
     .fixture-svg {
       width: 100%;
       height: 100%;
       overflow: visible;
-      filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.48));
+      filter: drop-shadow(0 20px 38px rgba(0, 0, 0, 0.48));
       transition: filter var(--transition-time) ease;
     }
     body.light-mode .fixture-svg {
-      filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.14));
+      filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.14));
     }
 
-    /* Symmetrical Volumetric Light Cone */
+    /* Synchronized Volumetric Light Cone */
     .light-cone {
       position: absolute;
-      top: 340px;
+      top: 125px; /* exactly at pivot point height: 720 * (52 / 300) = 125px */
       left: 50%;
-      width: 520px;
-      height: 680px;
-      margin-left: -260px;
+      width: 580px;
+      height: 640px;
+      margin-left: -290px;
+      transform-origin: 290px 0px; /* pivots at top center */
       background: linear-gradient(to bottom, 
-        rgba(255, 225, 120, 0.58) 0%, 
-        rgba(255, 180, 50, 0.20) 42%, 
-        rgba(255, 140, 20, 0.04) 75%, 
+        transparent 195px, 
+        rgba(255, 225, 120, 0.58) 205px, 
+        rgba(255, 180, 50, 0.20) 330px, 
+        rgba(255, 140, 20, 0.04) 500px, 
         transparent 100%
       );
       -webkit-mask-image: conic-gradient(
-        from 148deg at 50% 0px, 
+        from 148deg at 50% 205px, 
         transparent 0deg, 
         rgba(0,0,0,0.15) 12deg, 
         rgba(0,0,0,1) 28deg, 
@@ -298,7 +302,7 @@
         transparent 92deg
       );
       mask-image: conic-gradient(
-        from 148deg at 50% 0px, 
+        from 148deg at 50% 205px, 
         transparent 0deg, 
         rgba(0,0,0,0.15) 12deg, 
         rgba(0,0,0,1) 28deg, 
@@ -308,7 +312,6 @@
       );
       pointer-events: none;
       mix-blend-mode: screen;
-      transform-origin: 260px 0px;
       z-index: 12;
       opacity: 1;
       transition: opacity var(--transition-time) cubic-bezier(0.4, 0, 0.2, 1);
@@ -317,7 +320,7 @@
       opacity: 0;
     }
 
-    /* Filament Incandescent Styling */
+    /* Filament Incandescent Glow */
     .filament-core {
       transition: filter 0.5s ease, fill 0.5s ease, opacity 0.5s ease;
     }
@@ -364,7 +367,7 @@
       stroke: url(#bronzeTrimLight);
     }
 
-    /* Incandescent Ignition Flare on Toggle */
+    /* Incandescent Ignition Pulse */
     @keyframes warmIgnition {
       0% { opacity: 0.1; filter: brightness(0.6); }
       18% { opacity: 0.95; filter: brightness(1.4); }
@@ -381,19 +384,15 @@
       animation: warmIgnition 0.42s ease-out forwards;
     }
 
-    /* Responsive Polish */
+    /* Responsive Adaptation */
     @media (max-width: 768px) {
-      .hud { padding: 28px 24px; }
-      .fixture-stage {
-        width: 320px;
-        height: 620px;
-      }
-      .fixture-shadow {
-        width: 320px;
-        height: 620px;
+      .hud { padding: 24px 20px; }
+      .fixture-stage, .fixture-shadow {
+        width: 340px;
+        height: 510px;
       }
       .light-cone {
-        top: 290px;
+        top: 88px;
         width: 440px;
         margin-left: -220px;
         transform-origin: 220px 0px;
@@ -425,7 +424,7 @@
 
     <footer class="hud-footer">
       <div class="meta-tag">
-        <span>Handcrafted Symmetrical Fixture</span><br>
+        <span>Handcrafted Symmetrical Pendant</span><br>
         <span>Gilded Brass &bull; Beveled Crown Glass</span>
       </div>
       <div class="interaction-cue">
@@ -439,28 +438,28 @@
   <div class="fixture-stage" id="fixture-stage">
     
     <!-- Cast Shadow Layer (Follows Pendulum Swing) -->
-    <svg class="fixture-shadow" id="fixture-shadow" viewBox="0 0 200 280" fill="none">
+    <svg class="fixture-shadow" id="fixture-shadow" viewBox="0 0 200 300" fill="none">
       <g id="shadow-swing-group">
         <!-- Hood Shadow -->
-        <polygon points="45,104 155,104 135,88 65,88" fill="#000" />
+        <polygon points="38,106 162,106 136,88 64,88" fill="#000" />
         <!-- Glass Body Shadow -->
-        <polygon points="52,104 148,104 134,162 66,162" fill="#000" />
+        <polygon points="46,106 154,106 138,184 62,184" fill="#000" />
         <!-- Base Hearth Shadow -->
-        <polygon points="64,162 136,162 130,174 70,174" fill="#000" />
-        <circle cx="100" cy="184" r="5" fill="#000" />
+        <polygon points="60,184 140,184 132,200 68,200" fill="#000" />
+        <circle cx="100" cy="208" r="5" fill="#000" />
       </g>
     </svg>
 
-    <!-- Master Symmetrical High-Craft SVG Fixture (viewBox: 0 0 200 280, center axis x=100) -->
+    <!-- Master Symmetrical High-Craft SVG Fixture (viewBox: 0 0 200 300, center axis x=100) -->
     <svg 
       class="fixture-svg" 
-      viewBox="0 0 200 280" 
+      viewBox="0 0 200 300" 
       fill="none" 
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
         <!-- Dark Theme: Antique Gilded Brass Gradients -->
-        <linearGradient id="brassChainDark" x1="90" y1="0" x2="110" y2="70" gradientUnits="userSpaceOnUse">
+        <linearGradient id="brassChainDark" x1="90" y1="0" x2="110" y2="60" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#4d3b14" />
           <stop offset="35%" stop-color="#c49a37" />
           <stop offset="50%" stop-color="#ffe699" />
@@ -468,7 +467,7 @@
           <stop offset="100%" stop-color="#2a1f0a" />
         </linearGradient>
 
-        <linearGradient id="brassBodyDark" x1="45" y1="75" x2="155" y2="190" gradientUnits="userSpaceOnUse">
+        <linearGradient id="brassBodyDark" x1="38" y1="74" x2="162" y2="214" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#2b1e0a" />
           <stop offset="22%" stop-color="#73541c" />
           <stop offset="48%" stop-color="#ffd56b" />
@@ -476,14 +475,14 @@
           <stop offset="100%" stop-color="#362507" />
         </linearGradient>
 
-        <linearGradient id="brassTrimDark" x1="45" y1="75" x2="155" y2="190" gradientUnits="userSpaceOnUse">
+        <linearGradient id="brassTrimDark" x1="38" y1="74" x2="162" y2="214" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#ffeeb8" />
           <stop offset="50%" stop-color="#997224" />
           <stop offset="100%" stop-color="#382608" />
         </linearGradient>
 
         <!-- Light Theme: Brushed Champagne Bronze Gradients -->
-        <linearGradient id="bronzeChainLight" x1="90" y1="0" x2="110" y2="70" gradientUnits="userSpaceOnUse">
+        <linearGradient id="bronzeChainLight" x1="90" y1="0" x2="110" y2="60" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#38322c" />
           <stop offset="35%" stop-color="#706457" />
           <stop offset="50%" stop-color="#ded8cf" />
@@ -491,7 +490,7 @@
           <stop offset="100%" stop-color="#26211c" />
         </linearGradient>
 
-        <linearGradient id="bronzeBodyLight" x1="45" y1="75" x2="155" y2="190" gradientUnits="userSpaceOnUse">
+        <linearGradient id="bronzeBodyLight" x1="38" y1="74" x2="162" y2="214" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#2e2722" />
           <stop offset="25%" stop-color="#5c5348" />
           <stop offset="50%" stop-color="#cfc7bc" />
@@ -499,14 +498,14 @@
           <stop offset="100%" stop-color="#1f1b17" />
         </linearGradient>
 
-        <linearGradient id="bronzeTrimLight" x1="45" y1="75" x2="155" y2="190" gradientUnits="userSpaceOnUse">
+        <linearGradient id="bronzeTrimLight" x1="38" y1="74" x2="162" y2="214" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#f5f0e6" />
           <stop offset="50%" stop-color="#695f54" />
           <stop offset="100%" stop-color="#2e2823" />
         </linearGradient>
 
         <!-- Crown Glass Gradients & Specular Sheen -->
-        <linearGradient id="glassSheen" x1="52" y1="104" x2="148" y2="162" gradientUnits="userSpaceOnUse">
+        <linearGradient id="glassSheen" x1="46" y1="106" x2="154" y2="184" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#ffffff" stop-opacity="0.30" />
           <stop offset="30%" stop-color="#ffe8a3" stop-opacity="0.14" />
           <stop offset="70%" stop-color="#ffffff" stop-opacity="0.05" />
@@ -534,78 +533,78 @@
       <!-- STATIC CEILING CANOPY & MOUNTING (Anchor at Top Center) -->
       <g class="ceiling-anchor">
         <!-- Ceiling Rosette Canopy / Escutcheon -->
-        <rect x="76" y="0" width="48" height="6" rx="2" class="metal-chain" />
-        <path d="M 82 6 L 118 6 L 112 14 L 88 14 Z" class="metal-chain" />
-        <ellipse cx="100" cy="14" rx="12" ry="3" class="metal-chain" />
+        <rect x="74" y="0" width="52" height="6" rx="2" class="metal-chain" />
+        <path d="M 80 6 L 120 6 L 114 14 L 86 14 Z" class="metal-chain" />
+        <ellipse cx="100" cy="14" rx="14" ry="3" class="metal-chain" />
         
         <!-- Suspension Rod from Ceiling to Pivot Ring -->
-        <line x1="100" y1="14" x2="100" y2="52" class="metal-chain" stroke-width="4.5" stroke-linecap="round" />
-        <ellipse cx="100" cy="30" rx="4.5" ry="2" class="metal-chain" />
-        <ellipse cx="100" cy="46" rx="4.5" ry="2" class="metal-chain" />
+        <line x1="100" y1="14" x2="100" y2="48" class="metal-chain" stroke-width="5" stroke-linecap="round" />
+        <ellipse cx="100" cy="26" rx="5" ry="2.2" class="metal-chain" />
+        <ellipse cx="100" cy="40" rx="5" ry="2.2" class="metal-chain" />
         
-        <!-- Ceiling Swivel Eye Ring -->
-        <circle cx="100" cy="56" r="6" stroke-width="3" fill="none" class="metal-chain" />
-        <circle cx="100" cy="56" r="2.5" fill="#fff" opacity="0.4" />
+        <!-- Ceiling Swivel Eye Ring (Interlocks with Lantern Ring at y=52) -->
+        <circle cx="100" cy="50" r="7" stroke-width="3.2" fill="none" class="metal-chain" />
+        <circle cx="100" cy="50" r="2.8" fill="#fff" opacity="0.4" />
       </g>
 
-      <!-- PENDULUM SWING ASSEMBLY (Pivots smoothly at x=100, y=56) -->
-      <g id="swing-lantern-assembly" style="transform-origin: 100px 56px;">
+      <!-- PENDULUM SWING ASSEMBLY (Rotates strictly around SVG pivot x=100, y=52) -->
+      <g id="swing-lantern-assembly">
         
-        <!-- Top Suspension Loop / Ring Connector -->
-        <circle cx="100" cy="66" r="6" stroke-width="3" fill="none" class="metal-lantern" />
-        <rect x="96" y="70" width="8" height="6" rx="1.5" class="metal-lantern" />
+        <!-- Top Suspension Loop / Ring Connector (Physically loops through ceiling ring) -->
+        <circle cx="100" cy="56" r="7" stroke-width="3.2" fill="none" class="metal-lantern" />
+        <rect x="94" y="64" width="12" height="8" rx="2" class="metal-lantern" />
 
         <!-- Pagoda Cap (Upper Tier) -->
-        <path d="M 84 76 L 116 76 L 128 88 L 72 88 Z" class="metal-lantern" stroke-width="1.2" />
-        <line x1="74" y1="88" x2="126" y2="88" stroke="#fff" stroke-width="1" opacity="0.35" />
+        <path d="M 80 72 L 120 72 L 134 86 L 66 86 Z" class="metal-lantern" stroke-width="1.2" />
+        <line x1="68" y1="86" x2="132" y2="86" stroke="#fff" stroke-width="1" opacity="0.35" />
 
         <!-- Pagoda Main Eaves Hood with Polished Lip -->
-        <path d="M 68 88 L 132 88 L 155 104 L 45 104 Z" class="metal-lantern" stroke-width="1.4" />
-        <line x1="43" y1="104" x2="157" y2="104" stroke="url(#specularGlint)" stroke-width="2" stroke-linecap="round" />
+        <path d="M 64 86 L 136 86 L 162 104 L 38 104 Z" class="metal-lantern" stroke-width="1.4" />
+        <line x1="36" y1="104" x2="164" y2="104" stroke="url(#specularGlint)" stroke-width="2.2" stroke-linecap="round" />
 
         <!-- Internal Brass Bulb Socket -->
-        <rect x="94" y="104" width="12" height="7" class="metal-lantern" />
+        <rect x="93" y="104" width="14" height="8" class="metal-lantern" />
 
         <!-- Crown Glass Chamber (Symmetrical Beveled Facets) -->
-        <polygon points="52,104 148,104 134,162 66,162" class="glass-facet" fill="url(#glassSheen)" stroke="rgba(255,255,255,0.18)" stroke-width="0.9" />
+        <polygon points="46,104 154,104 138,182 62,182" class="glass-facet" fill="url(#glassSheen)" stroke="rgba(255,255,255,0.18)" stroke-width="0.9" />
 
         <!-- Specular Glass Caustic Glare Reflection -->
-        <path d="M 62 104 L 80 104 L 92 162 L 74 162 Z" fill="url(#specularGlint)" opacity="0.16" pointer-events="none" />
+        <path d="M 58 104 L 80 104 L 94 182 L 72 182 Z" fill="url(#specularGlint)" opacity="0.16" pointer-events="none" />
 
         <!-- Glowing Incandescent Edison Bulb & Tungsten Filament -->
         <g class="edison-bulb">
           <!-- Blown Glass Teardrop Bulb Envelope -->
-          <ellipse cx="100" cy="126" rx="10" ry="13" class="bulb-envelope" fill="rgba(255, 235, 175, 0.12)" stroke="rgba(255, 225, 130, 0.42)" stroke-width="0.7" />
+          <ellipse cx="100" cy="132" rx="12" ry="16" class="bulb-envelope" fill="rgba(255, 235, 175, 0.12)" stroke="rgba(255, 225, 130, 0.45)" stroke-width="0.8" />
           
           <!-- Tungsten Filament Coiled Loop with Radiant Bloom -->
           <path 
-            d="M 97 112 L 97 122 C 97 127, 103 127, 103 122 L 103 112" 
+            d="M 96 114 L 96 126 C 96 133, 104 133, 104 126 L 104 114" 
             stroke="#ff981a" 
-            stroke-width="1.1" 
+            stroke-width="1.2" 
             fill="none" 
             class="filament-core" 
           />
-          <circle cx="100" cy="124" r="4.2" fill="#ffffff" filter="url(#bulbBloom)" class="filament-core" />
-          <circle cx="100" cy="124" r="8.5" fill="rgba(255, 190, 50, 0.38)" filter="url(#bulbBloom)" class="filament-core" />
+          <circle cx="100" cy="130" r="4.8" fill="#ffffff" filter="url(#bulbBloom)" class="filament-core" />
+          <circle cx="100" cy="130" r="9.5" fill="rgba(255, 190, 50, 0.38)" filter="url(#bulbBloom)" class="filament-core" />
         </g>
 
         <!-- Vertical Chamfered Framework Struts -->
-        <line x1="52" y1="104" x2="66" y2="162" class="metal-lantern" stroke-width="2.6" stroke-linecap="round" />
-        <line x1="148" y1="104" x2="134" y2="162" class="metal-lantern" stroke-width="2.6" stroke-linecap="round" />
-        <line x1="100" y1="104" x2="100" y2="162" stroke="#fff" stroke-width="0.8" opacity="0.28" />
+        <line x1="46" y1="104" x2="62" y2="182" class="metal-lantern" stroke-width="2.8" stroke-linecap="round" />
+        <line x1="154" y1="104" x2="138" y2="182" class="metal-lantern" stroke-width="2.8" stroke-linecap="round" />
+        <line x1="100" y1="104" x2="100" y2="182" stroke="#fff" stroke-width="0.9" opacity="0.28" />
 
         <!-- Bottom Base Hearth -->
-        <path d="M 64 162 L 136 162 L 130 174 L 70 174 Z" class="metal-lantern" stroke-width="1.4" />
-        <line x1="63" y1="162" x2="137" y2="162" stroke="#fff" stroke-width="1.2" opacity="0.4" />
+        <path d="M 60 182 L 140 182 L 132 198 L 68 198 Z" class="metal-lantern" stroke-width="1.4" />
+        <line x1="59" y1="182" x2="141" y2="182" stroke="#fff" stroke-width="1.2" opacity="0.4" />
 
         <!-- Bottom Acorn Finial Drop -->
-        <path d="M 95 174 C 95 182, 105 182, 105 174 Z" class="metal-lantern" />
-        <circle cx="100" cy="182" r="3.6" class="metal-lantern" />
-        <circle cx="99" cy="181" r="1.1" fill="#fff" opacity="0.55" />
+        <path d="M 94 198 C 94 208, 106 208, 106 198 Z" class="metal-lantern" />
+        <circle cx="100" cy="208" r="4" class="metal-lantern" />
+        <circle cx="99" cy="207" r="1.2" fill="#fff" opacity="0.55" />
       </g>
     </svg>
 
-    <!-- Synchronized Volumetric Light Beam (Centered at Bulb Axis) -->
+    <!-- Synchronized Volumetric Light Beam -->
     <div class="light-cone" id="light-cone"></div>
   </div>
 
@@ -766,7 +765,7 @@
       const stage = document.getElementById('fixture-stage');
       const rect = stage.getBoundingClientRect();
       const bulbX = rect.left + rect.width * 0.5;
-      const bulbY = rect.top + rect.height * 0.45;
+      const bulbY = rect.top + rect.height * (132 / 300);
 
       for (let i = 0; i < motes.length; i++) {
         const m = motes[i];
@@ -809,7 +808,7 @@
     }
 
     /* ==========================================================================
-       3. PENDULUM KINETICS & PULL-TO-SWING ENGINE (CENTERED CEILING PIVOT)
+       3. BULLETPROOF PENDULUM KINETICS & DRAG ENGINE
        ========================================================================== */
     const stage = document.getElementById('fixture-stage');
     const swingGroup = document.getElementById('swing-lantern-assembly');
@@ -831,12 +830,15 @@
     let dragStartAngle = 0;
     let hasDraggedSignificantly = false;
 
+    // Pivot coordinate in SVG viewBox (200x300) is (100, 52)
+    const PIVOT_SVG_X = 100;
+    const PIVOT_SVG_Y = 52;
+
     function getPivotCoords() {
       const rect = stage.getBoundingClientRect();
-      // SVG viewBox is 200x280, pivot is at (100, 56) -> 50% X, 20% Y
       return {
-        x: rect.left + rect.width * 0.50,
-        y: rect.top + rect.height * 0.20
+        x: rect.left + rect.width * (PIVOT_SVG_X / 200),
+        y: rect.top + rect.height * (PIVOT_SVG_Y / 300)
       };
     }
 
@@ -910,7 +912,7 @@
     }
 
     /* ==========================================================================
-       4. 60FPS KINETIC RENDER LOOP
+       4. 60FPS KINETIC RENDER LOOP (PRECISE SINGLE-SOURCE SVG ROTATION)
        ========================================================================== */
     function renderLoop() {
       time += 0.016;
@@ -926,13 +928,14 @@
 
       const deg = angle * (180 / Math.PI);
 
-      // 1. Swing Lantern Assembly around pivot (100, 56)
-      swingGroup.setAttribute('transform', `rotate(${deg} 100 56)`);
+      // 1. Swing Lantern Assembly strictly around SVG user pivot (100, 52)
+      // No CSS transform-origin interference — 100% stable, zero detachment!
+      swingGroup.setAttribute('transform', `rotate(${deg} ${PIVOT_SVG_X} ${PIVOT_SVG_Y})`);
 
       // 2. Counter-swaying Cast Shadow on Wall
-      shadowGroup.setAttribute('transform', `rotate(${deg * 0.85} 100 56)`);
+      shadowGroup.setAttribute('transform', `rotate(${deg * 0.85} ${PIVOT_SVG_X} ${PIVOT_SVG_Y})`);
 
-      // 3. Volumetric Cone Swing (pivots cleanly at top-center of cone)
+      // 3. Volumetric Cone Swing (top of cone is matched to pivot height)
       lightCone.style.transform = `rotate(${deg}deg)`;
 
       // 4. Atmospheric Dust Particle Render
