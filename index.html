@@ -49,6 +49,7 @@
       user-select: none;
       -webkit-user-select: none;
       cursor: default;
+      perspective: 1400px;
     }
 
     /* Ambient Wall Glow */
@@ -680,6 +681,26 @@
       thudOsc.stop(t + 0.065);
     }
 
+    function playChainClink(intensity = 0.5) {
+      if (!audioCtx) return;
+      const ctx = getAudio();
+      const t = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(2600 + Math.random() * 450, t);
+      osc.frequency.exponentialRampToValueAtTime(1400, t + 0.09);
+
+      gain.gain.setValueAtTime(0.045 * intensity, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.095);
+    }
+
     function setAmbientHum(enabled) {
       const ctx = getAudio();
       const t = ctx.currentTime;
@@ -720,18 +741,28 @@
     }
 
     /* ==========================================================================
-       2. CINEMATIC ATMOSPHERIC DUST PARTICLES
+       2. CINEMATIC ATMOSPHERIC DUST & AIR-WAKE TURBULENCE
        ========================================================================== */
     const canvas = document.getElementById('dust-canvas');
     const ctx = canvas.getContext('2d');
     let motes = [];
-    const MOTE_COUNT = 65;
+    const MOTE_COUNT = 70;
 
     let mousePos = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.5 };
+    let targetTiltX = 0;
+    let targetTiltY = 0;
+    let currentTiltX = 0;
+    let currentTiltY = 0;
 
     window.addEventListener('mousemove', (e) => {
       mousePos.x = e.clientX;
       mousePos.y = e.clientY;
+
+      // Subtle 3D perspective tilt
+      const normX = (e.clientX / window.innerWidth) - 0.5;
+      const normY = (e.clientY / window.innerHeight) - 0.5;
+      targetTiltX = normX * 6.5; // rotateY
+      targetTiltY = -normY * 4.0; // rotateX
     });
 
     function initMotes() {
@@ -767,6 +798,9 @@
       const bulbX = rect.left + rect.width * 0.5;
       const bulbY = rect.top + rect.height * (132 / 300);
 
+      // Linear lantern speed at body level
+      const lanternSpeed = angularVel * 340;
+
       for (let i = 0; i < motes.length; i++) {
         const m = motes[i];
         
@@ -780,6 +814,17 @@
           m.vy -= (cdy / cDist) * force;
         }
 
+        // Air-wake turbulence from the swinging lantern!
+        const bdx = bulbX - m.x;
+        const bdy = bulbY - m.y;
+        const bDist = Math.sqrt(bdx * bdx + bdy * bdy);
+
+        if (bDist < 200 && Math.abs(lanternSpeed) > 0.4) {
+          const wakeFactor = (200 - bDist) / 200;
+          m.vx += lanternSpeed * wakeFactor * 0.025;
+          m.vy -= Math.abs(lanternSpeed) * wakeFactor * 0.015;
+        }
+
         m.x += m.vx;
         m.y += m.vy;
         m.phase += 0.02;
@@ -790,9 +835,6 @@
         if (m.y > canvas.height) m.y = 0;
 
         // Illumination boost near the bulb
-        const bdx = bulbX - m.x;
-        const bdy = bulbY - m.y;
-        const bDist = Math.sqrt(bdx * bdx + bdy * bdy);
         let illumination = 1;
         if (bDist < 300) {
           illumination = 1 + (300 - bDist) / 300 * 2.2;
@@ -808,7 +850,7 @@
     }
 
     /* ==========================================================================
-       3. BULLETPROOF PENDULUM KINETICS & DRAG ENGINE
+       3. BULLETPROOF PENDULUM KINETICS, TACTILE DRAG & 3D PARALLAX
        ========================================================================== */
     const stage = document.getElementById('fixture-stage');
     const swingGroup = document.getElementById('swing-lantern-assembly');
@@ -850,6 +892,9 @@
       dragStartX = clientX;
       dragStartAngle = angle;
       angularVel = 0;
+
+      playChainClink(0.65);
+      if (navigator.vibrate) navigator.vibrate(8);
     }
 
     function onPointerMove(e) {
@@ -876,8 +921,10 @@
           // Clean Click Toggle
           toggleLighting();
         } else {
-          // Impart swing release momentum
-          angularVel = (Math.random() > 0.5 ? 1 : -1) * 0.025;
+          // Impart swing release momentum & audio clink
+          angularVel = (Math.random() > 0.5 ? 1 : -1) * 0.028;
+          playChainClink(0.85);
+          if (navigator.vibrate) navigator.vibrate(12);
         }
       }
     }
@@ -893,6 +940,7 @@
     function toggleLighting() {
       const isNowLight = document.body.classList.toggle('light-mode');
       playTactileSwitch(!isNowLight);
+      if (navigator.vibrate) navigator.vibrate(15);
       
       if (!isNowLight) {
         // Ignite sequence
@@ -908,11 +956,11 @@
       }
 
       // Dynamic kinetic impulse on toggle
-      angularVel += (Math.random() > 0.5 ? 1 : -1) * 0.06;
+      angularVel += (Math.random() > 0.5 ? 1 : -1) * 0.065;
     }
 
     /* ==========================================================================
-       4. 60FPS KINETIC RENDER LOOP (PRECISE SINGLE-SOURCE SVG ROTATION)
+       4. 60FPS KINETIC RENDER LOOP (PRECISE ROTATION + 3D PARALLAX TILT)
        ========================================================================== */
     function renderLoop() {
       time += 0.016;
@@ -929,7 +977,6 @@
       const deg = angle * (180 / Math.PI);
 
       // 1. Swing Lantern Assembly strictly around SVG user pivot (100, 52)
-      // No CSS transform-origin interference — 100% stable, zero detachment!
       swingGroup.setAttribute('transform', `rotate(${deg} ${PIVOT_SVG_X} ${PIVOT_SVG_Y})`);
 
       // 2. Counter-swaying Cast Shadow on Wall
@@ -938,7 +985,12 @@
       // 3. Volumetric Cone Swing (top of cone is matched to pivot height)
       lightCone.style.transform = `rotate(${deg}deg)`;
 
-      // 4. Atmospheric Dust Particle Render
+      // 4. Smooth 3D Cursor Parallax Tilt on the stage
+      currentTiltX += (targetTiltX - currentTiltX) * 0.08;
+      currentTiltY += (targetTiltY - currentTiltY) * 0.08;
+      stage.style.transform = `translateX(-50%) rotateY(${currentTiltX.toFixed(2)}deg) rotateX(${currentTiltY.toFixed(2)}deg)`;
+
+      // 5. Atmospheric Dust Particle Render with Air-Wake
       renderMotes();
 
       requestAnimationFrame(renderLoop);
